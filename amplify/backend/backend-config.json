@@ -1,1 +1,10 @@
-{}
+{
+  "auth": {
+    "amiiassetmanagement08808f7b": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  }
+}
