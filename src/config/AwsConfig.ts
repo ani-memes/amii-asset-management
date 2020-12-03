@@ -25,7 +25,7 @@ export const AWSConfig = {
   ...awsExports,
   oauth: {
     ...awsExports.oauth,
-    domain: 'waifu-management.auth.unthrottled.io',
+    domain: 'amii-management.auth.unthrottled.io',
     redirectSignIn: isLocalhost ? localRedirectSignIn : productionRedirectSignIn,
     redirectSignOut: isLocalhost ? localRedirectSignOut : productionRedirectSignOut,
   },

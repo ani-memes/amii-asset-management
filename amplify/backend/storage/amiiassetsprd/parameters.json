@@ -1,0 +1,7 @@
+{
+    "tableName": "omiiassets",
+    "partitionKeyName": "partition_key",
+    "partitionKeyType": "S",
+    "sortKeyName": "sort_key",
+    "sortKeyType": "S"
+}
