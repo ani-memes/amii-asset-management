@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-amiiassetmanagement-dev-174345-authRole",
+      "UnauthRoleArn": "arn:aws:iam::627099639403:role/amplify-amiiassetmanagement-dev-174345-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::627099639403:role/amplify-amiiassetmanagement-dev-174345-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-amiiassetmanagement-dev-174345-deployment",
+      "UnauthRoleName": "amplify-amiiassetmanagement-dev-174345-unauthRole",
+      "StackName": "amplify-amiiassetmanagement-dev-174345",
+      "StackId": "arn:aws:cloudformation:us-west-2:627099639403:stack/amplify-amiiassetmanagement-dev-174345/64132a70-35c1-11eb-a507-06519b4450d1",
+      "AmplifyAppId": "d1ldt96wu1xv5q"
+    },
+    "categories": {
+      "auth": {
+        "amiiassetmanagementabc246e8": {}
+      }
+    }
+  }
+}
