@@ -68,7 +68,7 @@
         "Layers": [],
         "Timeout": "25",
         "Code": {
-          "S3Bucket": "amplify-amiiassetmanagement-dev-50838-deployment",
+          "S3Bucket": "amplify-amiiassetmanagement-prod-60947-deployment",
           "S3Key": "amplify-builds/amiiassetspublic-6c3573704e5973346a50-build.zip"
         }
       }
