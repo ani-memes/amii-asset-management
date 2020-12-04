@@ -1,0 +1,61 @@
+{
+    "paths": [
+        {
+            "name": "/assets",
+            "lambdaFunction": "amiiassetmanagement8bb8687a",
+            "privacy": {
+                "private": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ]
+            },
+            "policyResourceName": "/assets"
+        },
+        {
+            "name": "/public/assets",
+            "lambdaFunction": "amiiassetspublic",
+            "privacy": {
+                "open": true
+            },
+            "policyResourceName": "/public/assets"
+        }
+    ],
+    "resourceName": "amiiassets",
+    "apiName": "amiiassets",
+    "functionArns": [
+        {
+            "lambdaFunction": "amiiassetmanagement8bb8687a"
+        },
+        {
+            "lambdaFunction": "amiiassetspublic"
+        }
+    ],
+    "privacy": {
+        "auth": 1,
+        "unauth": 0,
+        "authRoleName": "amplify-amiiassetmanagement-dev-50838-authRole",
+        "unAuthRoleName": "amplify-amiiassetmanagement-dev-50838-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "amiiassetmanagement8bb8687a",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        },
+        {
+            "category": "function",
+            "resourceName": "amiiassetspublic",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}
