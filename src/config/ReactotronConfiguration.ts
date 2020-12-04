@@ -12,7 +12,7 @@ declare global {
 console.tron = Reactotron.log;
 
 const reactotronInstance = Reactotron.configure({
-  name: 'Waifu Asset Management',
+  name: 'AMII Asset Management',
 })
   .use(reactotronRedux())
   .connect();

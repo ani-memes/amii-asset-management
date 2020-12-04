@@ -32,7 +32,7 @@ export const AWSConfig = {
   },
   Storage: {
     AWSS3: {
-      bucket: `waifu-motivation-assets${isNonProd ? '-nonprod' : ''}`,
+      bucket: `amii-assets${isNonProd ? '-nonprod' : ''}`,
       region: 'us-east-1',
     },
     customPrefix: {

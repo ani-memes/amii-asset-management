@@ -22,26 +22,26 @@ const theme = createMuiTheme({
   palette: {
     type: "dark",
     primary: {
-      main: '#1b191a',
+      main: '#2a2d44', // header color
       contrastText: "#bbbbbb"
     },
     secondary: {
-      main: '#4c9697'
+      main: '#578CDA'
     },
     background: {
-      paper: "#161415",
-      default: "#191718"
+      paper: "#262940", // text editor
+      default: "#282b42", // base background
     },
     text: {
       primary: "#bbb",
-      secondary: "#86a4ab",
-      disabled: "#6f6f6f",
+      secondary: "#7b8bab",
+      disabled: "#585F6F",
     },
-    divider: "#211e1e",
+    divider: "#2a334b", // border color
     action: {
-      hover: "#251719",
-      focus: "#251719",
-      selected: "#251719"
+      hover: "#2d3047", // highlight color
+      focus: "#2d3047", // highlight color
+      selected: "#2d3047" // highlight color
     }
   },
 });

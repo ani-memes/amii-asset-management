@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
   },
   image: {
-    backgroundImage: 'url(https://raw.githubusercontent.com/waifu-motivator/waifu-motivator-plugin/master/images/wmp_logo.png)',
+    backgroundImage: 'url(https://waifu-motivation-assets.s3.amazonaws.com/visuals/amused/aqua_amused.gif)',
     backgroundRepeat: 'no-repeat',
     backgroundColor:
       theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
@@ -66,8 +66,10 @@ const Login: FC<Props> = ({onLogin, loading}) => {
               <Avatar className={classes.avatar}>
                 <LockOutlinedIcon/>
               </Avatar>
-              <Typography component="h1" variant="h5" paragraph>
-                Waifu Asset Management
+              <Typography component="h1" variant="h5" paragraph style={{
+                marginTop: '1rem',
+              }}>
+                AMII Asset Management
               </Typography>
               <form className={classes.form} noValidate>
                 <GoogleButton onClick={onLogin} style={{
