@@ -5,13 +5,10 @@
 	STORAGE_AMIIASSETSTORAGE_NAME
 Amplify Params - DO NOT EDIT */
 
-exports.handler = async (event) => {
-    const response = {
-        statusCode: 200,
-     headers: {
-         "Access-Control-Allow-Origin": "*"
-     },
-        body: JSON.stringify('Hello from Lambda!'),
-    };
-    return response;
-};
+const awsServerlessExpress = require('aws-serverless-express');
+const app = require('./app');
+
+const server = awsServerlessExpress.createServer(app);
+
+exports.handler = (event, context) =>
+  awsServerlessExpress.proxy(server, event, context, 'PROMISE').promise;
