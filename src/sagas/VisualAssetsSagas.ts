@@ -44,6 +44,10 @@ function* visualAssetFetchSaga() {
     API.get('amiiassets', '/public/assets/visuals', {})
   );
   console.log('this is api response', res);
+  const privateResponse = yield call(()=>
+    API.get('amiiassets', '/assets/visuals', {})
+  );
+  console.log('this is private api response', privateResponse);
 
   const {s3List} = yield select(selectVisualAssetState)
   if (s3List.legth) return;
