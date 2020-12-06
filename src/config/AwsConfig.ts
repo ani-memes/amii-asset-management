@@ -1,8 +1,8 @@
 import awsExports from "../aws-exports";
 
-const isNonProd = Boolean(
+const isNonProd = window.location.hostname.indexOf('non-prod') > -1;
+const isLocal = Boolean(
   window.location.hostname === "localhost" ||
-  window.location.hostname.indexOf('non-prod') > -1 ||
   // [::1] is the IPv6 localhost address.
   window.location.hostname === "[::1]" ||
   // 127.0.0.1/8 is considered localhost for IPv4.
@@ -26,13 +26,15 @@ export const AWSConfig = {
   ...awsExports,
   oauth: {
     ...awsExports.oauth,
-    domain: isNonProd ? 'amii-management-nonprod.auth.unthrottled.io' : 'amii-management.auth.unthrottled.io',
-    redirectSignIn: isNonProd ? localRedirectSignIn : productionRedirectSignIn,
-    redirectSignOut: isNonProd ? localRedirectSignOut : productionRedirectSignOut,
+    domain: isNonProd || isLocal ?
+      'amii-management-nonprod.auth.unthrottled.io' :
+      'amii-management.auth.unthrottled.io',
+    redirectSignIn: isLocal ? localRedirectSignIn : productionRedirectSignIn,
+    redirectSignOut: isLocal ? localRedirectSignOut : productionRedirectSignOut,
   },
   Storage: {
     AWSS3: {
-      bucket: `amii-assets${isNonProd ? '-nonprod' : ''}`,
+      bucket: `amii-assets${isNonProd || isLocal ? '-nonprod' : ''}`,
       region: 'us-east-1',
     },
     customPrefix: {

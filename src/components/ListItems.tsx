@@ -36,7 +36,6 @@ export const MainLocations: RouteDefinition[] = [
 export const SecondaryLocations: RouteDefinition[] = [
   {name: 'Visual', icon: GifTwoTone, route: '/asset/type/visual', routeComponent: Todo, extraRouteProps: {}},
   {name: 'Audio', icon: RecordVoiceOver, route: '/asset/type/audio', routeComponent: Todo, extraRouteProps: {}},
-  {name: 'Text ', icon: ShortText, route: '/asset/type/text', routeComponent: Todo, extraRouteProps: {}},
 ]
 
 const buildListItems = (routeDefinitions: RouteDefinition[], currentRoute: string) =>

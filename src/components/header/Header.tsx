@@ -132,7 +132,7 @@ const Header: FC<Props> = ({
           <MenuIcon/>
         </IconButton>
         <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-          Waifu Asset Management
+          AMII Asset Management
         </Typography>
         <div className={classes.search} onKeyUp={invokeOnEnter(search)}>
           <div className={classes.searchIcon}>
