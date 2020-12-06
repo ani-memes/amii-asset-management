@@ -7,6 +7,13 @@
                 "open": true
             },
             "policyResourceName": "/public/assets"
+        },
+        {
+            "name": "/assets",
+            "lambdaFunction": "amiiassetmanagementapi",
+            "privacy": {
+                "open": true
+            }
         }
     ],
     "resourceName": "amiiapi",
@@ -14,6 +21,9 @@
     "functionArns": [
         {
             "lambdaFunction": "amiipublicassets"
+        },
+        {
+            "lambdaFunction": "amiiassetmanagementapi"
         }
     ],
     "privacy": {
@@ -30,6 +40,15 @@
                 "Name",
                 "Arn"
             ]
+        },
+        {
+            "category": "function",
+            "resourceName": "amiiassetmanagementapi",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
         }
-    ]
+    ],
+    "uuid": "9a07acd9"
 }

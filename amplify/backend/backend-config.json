@@ -37,6 +37,14 @@
             "Name",
             "Arn"
           ]
+        },
+        {
+          "category": "function",
+          "resourceName": "amiiassetmanagementapi",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
         }
       ]
     }
