@@ -12,10 +12,10 @@ const params = {
   TableName: `amiiassets-${process.env.ENV}`,
   IndexName: 'asset_type-sort_key-index',
   KeyConditionExpression: 'asset_type = :value and sort_key = :type',
-  ExpressionAttributeValues: { ':value': 'visual', ':type' : 'primary' },
+  ExpressionAttributeValues: {':value': 'visual', ':type': 'primary'},
 }
 
-async function queryItems(){
+async function queryItems() {
   try {
     return await docClient.query(params).promise()
   } catch (err) {
@@ -26,8 +26,13 @@ async function queryItems(){
 exports.handler = async (event, context) => {
   try {
     const data = await queryItems()
-    return { body: JSON.stringify(data) }
+    return {
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      },
+      body: JSON.stringify(data),
+    }
   } catch (err) {
-    return { error: err }
+    return {error: err}
   }
 }

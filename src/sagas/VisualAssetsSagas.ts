@@ -1,4 +1,5 @@
 import {all, call, fork, put, select, takeEvery} from 'redux-saga/effects';
+import {API} from 'aws-amplify';
 import {
   INITIALIZED_APPLICATION,
   REQUESTED_SYNC_CHANGES,
@@ -37,7 +38,13 @@ function* fetchS3List() {
   }));
 }
 
+
 function* visualAssetFetchSaga() {
+  const res = yield call(()=>
+    API.get('amiiassets', '/public/assets/visuals', {})
+  );
+  console.log('this is api response', res);
+
   const {s3List} = yield select(selectVisualAssetState)
   if (s3List.legth) return;
 

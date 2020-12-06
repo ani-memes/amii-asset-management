@@ -32,6 +32,9 @@ exports.handler = async (event) => {
     await createItem()
     return {
       statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      },
       body: 'Successfully created item!',
     }
   } catch (err) {
