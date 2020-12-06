@@ -9,6 +9,14 @@
     },
     "env": {
       "Type": "String"
+    },
+    "storageamiiassetsnonprodName": {
+      "Type": "String",
+      "Default": "storageamiiassetsnonprodName"
+    },
+    "storageamiiassetsnonprodArn": {
+      "Type": "String",
+      "Default": "storageamiiassetsnonprodArn"
     }
   },
   "Conditions": {
@@ -55,6 +63,12 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
+            },
+            "STORAGE_AMIIASSETSNONPROD_NAME": {
+              "Ref": "storageamiiassetsnonprodName"
+            },
+            "STORAGE_AMIIASSETSNONPROD_ARN": {
+              "Ref": "storageamiiassetsnonprodArn"
             }
           }
         },
@@ -69,7 +83,7 @@
         "Timeout": "25",
         "Code": {
           "S3Bucket": "amplify-amiiassetmanagement-dev-50838-deployment",
-          "S3Key": "amplify-builds/amiiassetspublic-6c3573704e5973346a50-build.zip"
+          "S3Key": "amplify-builds/amiiassetspublic-3179777a724a7656444a-build.zip"
         }
       }
     },
@@ -150,6 +164,52 @@
                   }
                 ]
               }
+            }
+          ]
+        }
+      }
+    },
+    "AmplifyResourcesPolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "amplify-lambda-execution-policy",
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:Get*",
+                "dynamodb:BatchGetItem",
+                "dynamodb:List*",
+                "dynamodb:Describe*",
+                "dynamodb:Scan",
+                "dynamodb:Query"
+              ],
+              "Resource": [
+                {
+                  "Ref": "storageamiiassetsnonprodArn"
+                },
+                {
+                  "Fn::Join": [
+                    "/",
+                    [
+                      {
+                        "Ref": "storageamiiassetsnonprodArn"
+                      },
+                      "index/*"
+                    ]
+                  ]
+                }
+              ]
             }
           ]
         }

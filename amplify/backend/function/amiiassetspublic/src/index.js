@@ -1,4 +1,9 @@
-
+/* Amplify Params - DO NOT EDIT
+	ENV
+	REGION
+	STORAGE_AMIIASSETSNONPROD_ARN
+	STORAGE_AMIIASSETSNONPROD_NAME
+Amplify Params - DO NOT EDIT */
 
 exports.handler = async (event) => {
     // TODO implement

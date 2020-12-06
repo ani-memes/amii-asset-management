@@ -3,12 +3,31 @@
     "amiiassetmanagement8bb8687a": {
       "build": true,
       "providerPlugin": "awscloudformation",
-      "service": "Lambda"
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "cognito57495739",
+          "attributes": [
+            "UserPoolId"
+          ]
+        }
+      ]
     },
     "amiiassetspublic": {
       "build": true,
       "providerPlugin": "awscloudformation",
-      "service": "Lambda"
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "storage",
+          "resourceName": "amiiassetsnonprod",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        }
+      ]
     }
   },
   "auth": {
@@ -41,6 +60,12 @@
           ]
         }
       ]
+    }
+  },
+  "storage": {
+    "amiiassetsnonprod": {
+      "service": "DynamoDB",
+      "providerPlugin": "awscloudformation"
     }
   }
 }
