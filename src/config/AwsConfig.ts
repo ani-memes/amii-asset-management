@@ -35,7 +35,7 @@ export const AWSConfig = {
   Storage: {
     AWSS3: {
       bucket: `amii-assets${isNonProd || isLocal ? '-nonprod' : ''}`,
-      region: 'us-east-1',
+      region: 'us-west-2',
     },
     customPrefix: {
       public: ''
