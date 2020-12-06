@@ -40,14 +40,19 @@ function* fetchS3List() {
 
 
 function* visualAssetFetchSaga() {
-  const res = yield call(()=>
-    API.get('amiiassets', '/public/assets/visuals', {})
-  );
-  console.log('this is api response', res);
-  const privateResponse = yield call(()=>
-    API.get('amiiassets', '/assets/visuals', {})
-  );
-  console.log('this is private api response', privateResponse);
+  // const res = yield call(()=>
+  //   API.get('amiiassets', '/public/assets/visuals', {})
+  // );
+  // console.log('this is api response', res);
+  try {
+
+    const privateResponse = yield call(() =>
+      API.get('amiiapi', '/assets/visuals', {})
+    );
+    console.log('this is private api response', privateResponse);
+  } catch (e) {
+    console.warn('unable to get visual assets', e)
+  }
 
   const {s3List} = yield select(selectVisualAssetState)
   if (s3List.legth) return;
@@ -58,7 +63,7 @@ function* visualAssetFetchSaga() {
     const visualAssets = yield call(fetchS3List);
     yield put(createReceivedVisualS3List(visualAssets));
   } catch (e) {
-    console.warn("Unable to get user profile information", e)
+    console.warn("Unable to get visual asset s3 list", e)
   }
 }
 
@@ -75,7 +80,7 @@ function* assetJsonSaga() {
     );
     yield put(createReceivedVisualAssetList(assetJson));
   } catch (e) {
-    console.warn("Unable to get user profile information", e)
+    console.warn("Unable to get visual asset list", e)
   }
 }
 

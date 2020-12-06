@@ -5,7 +5,6 @@ import VisualAssetsSagas from "./VisualAssetsSagas";
 import MotivationAssetSagas from "./MotivationAssetSagas";
 import CharacterSourceSagas from "./CharacterSourceSagas";
 import AudibleAssetsSagas from "./AudibleAssetsSagas";
-import TextAssetsSagas from "./TextAssetsSagas";
 
 export default function* rootSaga(): Generator {
   yield all([
@@ -13,7 +12,6 @@ export default function* rootSaga(): Generator {
     SecuritySagas(),
     VisualAssetsSagas(),
     AudibleAssetsSagas(),
-    TextAssetsSagas(),
     MotivationAssetSagas(),
     CharacterSourceSagas(),
   ]);

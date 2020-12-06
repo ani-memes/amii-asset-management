@@ -26,7 +26,7 @@ function* audibleAssetFetchSaga() {
       eTag: s3Asset.eTag.replaceAll('"', '')
     }))));
   } catch (e) {
-    console.warn("Unable to get user profile information", e)
+    console.warn("Unable to get audible assets", e)
   }
 }
 
@@ -42,7 +42,7 @@ function* assetJsonSaga() {
     );
     yield put(createReceivedAudibleAssetList(assetJson));
   } catch (e) {
-    console.warn("Unable to get user profile information", e)
+    console.warn("Unable to get audible asset list", e)
   }
 }
 
