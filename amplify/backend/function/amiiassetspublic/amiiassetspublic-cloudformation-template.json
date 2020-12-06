@@ -83,7 +83,7 @@
         "Timeout": "25",
         "Code": {
           "S3Bucket": "amplify-amiiassetmanagement-dev-50838-deployment",
-          "S3Key": "amplify-builds/amiiassetspublic-3179777a724a7656444a-build.zip"
+          "S3Key": "amplify-builds/amiiassetspublic-6f326654615676644a31-build.zip"
         }
       }
     },
