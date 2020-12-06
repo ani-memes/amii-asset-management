@@ -12,15 +12,15 @@ const isLocal = Boolean(
 );
 
 // Assuming you have two redirect URIs, and the first is for localhost and second is for production
-const [
-  productionRedirectSignIn,
-  localRedirectSignIn,
-] = awsExports.oauth.redirectSignIn.split(",");
+// const [
+//   productionRedirectSignIn,
+//   localRedirectSignIn,
+// ] = awsExports.oauth.redirectSignIn.split(",");
 
-const [
-  productionRedirectSignOut,
-  localRedirectSignOut,
-] = awsExports.oauth.redirectSignOut.split(",");
+// const [
+//   productionRedirectSignOut,
+//   localRedirectSignOut,
+// ] = awsExports.oauth.redirectSignOut.split(",");
 
 export const AWSConfig = {
   ...awsExports,
@@ -29,8 +29,8 @@ export const AWSConfig = {
     domain: isNonProd || isLocal ?
       'amii-management-nonprod.auth.unthrottled.io' :
       'amii-management.auth.unthrottled.io',
-    redirectSignIn: isLocal ? localRedirectSignIn : productionRedirectSignIn,
-    redirectSignOut: isLocal ? localRedirectSignOut : productionRedirectSignOut,
+    // redirectSignIn: isLocal ? localRedirectSignIn : productionRedirectSignIn,
+    // redirectSignOut: isLocal ? localRedirectSignOut : productionRedirectSignOut,
   },
   Storage: {
     AWSS3: {

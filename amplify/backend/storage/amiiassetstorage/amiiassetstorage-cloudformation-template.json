@@ -1,0 +1,183 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "DynamoDB resource stack creation using Amplify CLI",
+    "Parameters": {
+        "partitionKeyName": {
+            "Type": "String"
+        },
+        "partitionKeyType": {
+            "Type": "String"
+        },
+        "env": {
+            "Type": "String"
+        },
+        
+        "sortKeyName": {
+            "Type": "String"
+        },
+        "sortKeyType": {
+            "Type": "String"
+        },
+        
+        "tableName": {
+            "Type": "String"
+        }
+    },
+    "Conditions": {
+        "ShouldNotCreateEnvResources": {
+            "Fn::Equals": [
+                {
+                    "Ref": "env"
+                },
+                "NONE"
+            ]
+        }
+    },
+    "Resources": {
+        "DynamoDBTable": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "AttributeDefinitions": [
+                  
+                  {
+                      "AttributeName": "partition_key",
+                      "AttributeType": "S"
+                  }  , 
+                  
+                  {
+                      "AttributeName": "sort_key",
+                      "AttributeType": "S"
+                  }  , 
+                  
+                  {
+                      "AttributeName": "asset_type",
+                      "AttributeType": "S"
+                  } 
+                  
+                ],
+                "KeySchema": [
+                  
+                  {
+                    "AttributeName": "partition_key",
+                    "KeyType": "HASH"
+                  }  , 
+                  
+                  {
+                    "AttributeName": "sort_key",
+                    "KeyType": "RANGE"
+                  } 
+                  
+                ],
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": "5",
+                    "WriteCapacityUnits": "5"
+                },
+                "StreamSpecification": {
+                    "StreamViewType": "NEW_IMAGE"
+                },
+                "TableName": {
+                    "Fn::If": [
+                        "ShouldNotCreateEnvResources",
+                        {
+                           "Ref": "tableName"
+                        }, 
+                        {
+
+                            "Fn::Join": [
+                                "",
+                                [
+                                  {
+                                    "Ref": "tableName"
+                                  },
+                                  "-",
+                                  {
+                                    "Ref": "env"
+                                  }
+                                ]
+                            ]
+                        }
+                    ]
+                }
+                
+                ,"GlobalSecondaryIndexes": [
+                  
+                    {
+                        "IndexName": "asset_type_index",
+                        "KeySchema": [
+                            
+                            {
+                                "AttributeName": "asset_type",
+                                "KeyType": "HASH"
+                            }  , 
+                            
+                            {
+                                "AttributeName": "sort_key",
+                                "KeyType": "RANGE"
+                            } 
+                            
+                        ],
+                        "Projection": {
+                            "ProjectionType": "ALL"
+                        },
+                        "ProvisionedThroughput": {
+                            "ReadCapacityUnits": "5",
+                            "WriteCapacityUnits": "5"
+                        }
+                    } 
+                  
+                ]
+                
+            }
+        }
+    },
+    "Outputs": {
+        "Name": {
+            "Value": {
+                "Ref": "DynamoDBTable"
+            }
+        },
+        "Arn": {
+            "Value": {
+                "Fn::GetAtt": [
+                    "DynamoDBTable",
+                    "Arn"
+                ]
+            }
+        },
+        "StreamArn": {
+            "Value": {
+                "Fn::GetAtt": [
+                    "DynamoDBTable",
+                    "StreamArn"
+                ]
+            }
+        },
+        "PartitionKeyName": {
+            "Value": {
+                "Ref": "partitionKeyName"
+            }
+        },
+        "PartitionKeyType": {
+            "Value": {
+                "Ref": "partitionKeyType"
+            }
+        },
+        
+        "SortKeyName": {
+            "Value": {
+                "Ref": "sortKeyName"
+            }
+        },
+        "SortKeyType": {
+            "Value": {
+                "Ref": "sortKeyType"
+            }
+        },
+        
+        "Region": {
+            "Value": {
+                "Ref": "AWS::Region"
+            }
+        }
+    }
+}

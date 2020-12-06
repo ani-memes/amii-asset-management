@@ -29,8 +29,10 @@ export const withAuthenticator = (Component: FC): FC => {
         .then((userData: any) => setUser(userData));
     }, []);
 
-    // @ts-ignore
-    const login = () => Auth.federatedSignIn({provider: 'Google'});
+    const login = () =>
+      // @ts-ignore
+      Auth.federatedSignIn({provider: 'Google'});
+
     return (
       <div>
         {user ? (
