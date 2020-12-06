@@ -1,3 +1,13 @@
 {
-  "lambdaLayers": []
+  "lambdaLayers": [],
+  "permissions": {
+    "storage": {
+      "amiiassetstorage": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  }
 }

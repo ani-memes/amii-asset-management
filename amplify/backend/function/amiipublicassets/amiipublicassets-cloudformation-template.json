@@ -9,6 +9,14 @@
     },
     "env": {
       "Type": "String"
+    },
+    "storageamiiassetstorageName": {
+      "Type": "String",
+      "Default": "storageamiiassetstorageName"
+    },
+    "storageamiiassetstorageArn": {
+      "Type": "String",
+      "Default": "storageamiiassetstorageArn"
     }
   },
   "Conditions": {
@@ -55,6 +63,12 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
+            },
+            "STORAGE_AMIIASSETSTORAGE_NAME": {
+              "Ref": "storageamiiassetstorageName"
+            },
+            "STORAGE_AMIIASSETSTORAGE_ARN": {
+              "Ref": "storageamiiassetstorageArn"
             }
           }
         },
@@ -69,7 +83,7 @@
         "Timeout": "25",
         "Code": {
           "S3Bucket": "amplify-amiiassetmanagement-dev-121652-deployment",
-          "S3Key": "amplify-builds/amiipublicassets-575246455773454d6b36-build.zip"
+          "S3Key": "amplify-builds/amiipublicassets-3076312f372b4d613736-build.zip"
         }
       }
     },
@@ -150,6 +164,52 @@
                   }
                 ]
               }
+            }
+          ]
+        }
+      }
+    },
+    "AmplifyResourcesPolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "amplify-lambda-execution-policy",
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:Get*",
+                "dynamodb:BatchGetItem",
+                "dynamodb:List*",
+                "dynamodb:Describe*",
+                "dynamodb:Scan",
+                "dynamodb:Query"
+              ],
+              "Resource": [
+                {
+                  "Ref": "storageamiiassetstorageArn"
+                },
+                {
+                  "Fn::Join": [
+                    "/",
+                    [
+                      {
+                        "Ref": "storageamiiassetstorageArn"
+                      },
+                      "index/*"
+                    ]
+                  ]
+                }
+              ]
             }
           ]
         }

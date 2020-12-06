@@ -1,0 +1,4 @@
+Things that are different:
+----
+- asset api manual authorization
+-

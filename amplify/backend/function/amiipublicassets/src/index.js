@@ -1,4 +1,9 @@
-
+/* Amplify Params - DO NOT EDIT
+	ENV
+	REGION
+	STORAGE_AMIIASSETSTORAGE_ARN
+	STORAGE_AMIIASSETSTORAGE_NAME
+Amplify Params - DO NOT EDIT */
 
 exports.handler = async (event) => {
     const response = {

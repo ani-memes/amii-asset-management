@@ -3,7 +3,17 @@
     "amiipublicassets": {
       "build": true,
       "providerPlugin": "awscloudformation",
-      "service": "Lambda"
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "storage",
+          "resourceName": "amiiassetstorage",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        }
+      ]
     },
     "amiiassetmanagementapi": {
       "build": true,
@@ -16,11 +26,7 @@
           "attributes": [
             "Name",
             "Arn"
-          ],
-          "attributeEnvMap": {
-            "Name": "TABLE_NAME",
-            "Arn": "TABLE_ARN"
-          }
+          ]
         }
       ]
     }
