@@ -1,3 +1,5 @@
 Things that are different:
 ----
 - asset api manual authorization
+- removed existing GSI and added type to timestamp
+- IDP:
