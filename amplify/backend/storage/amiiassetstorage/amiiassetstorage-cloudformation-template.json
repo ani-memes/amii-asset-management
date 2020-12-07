@@ -48,12 +48,10 @@
                       "AttributeName": "sort_key",
                       "AttributeType": "S"
                   }  , 
-                  
                   {
                       "AttributeName": "asset_type",
                       "AttributeType": "S"
                   } 
-                  
                 ],
                 "KeySchema": [
                   
