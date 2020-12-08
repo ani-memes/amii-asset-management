@@ -14,6 +14,8 @@ app.use(function (req, res, next) {
 
 app.use('/public/assets', require('./api'))
 
+app.use('/assets', require('./adminAPI'))
+
 const port = 4000;
 app.listen(port, function () {
   console.log(`App started ${port}`)

@@ -6,8 +6,11 @@ const {
   assetTypeIndex,
   tableName,
   dynamodb,
-  assetTypeAttribute,
-  timeStampAttribute,
+  schema : {
+    assetTypeAttribute,
+    timeStampAttribute,
+    definitionAttribute,
+  }
 } = require('./AWSConfigs')
 
 apiRouter.get(
@@ -34,7 +37,7 @@ apiRouter.get(
         res.statusCode = 500;
         res.json({error: `Could not load items: ${err}`});
       } else {
-        res.json(data.Items);
+        res.json(data.Items.map(item => JSON.parse(item[definitionAttribute])));
       }
     });
   });

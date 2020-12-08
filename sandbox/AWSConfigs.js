@@ -12,11 +12,19 @@ const assetTypeIndex = 'asset_type_index';
 
 const assetTypeAttribute = 'ast';
 const timeStampAttribute = 'ts';
+const partitionKey = 'pk';
+const sortKey = 'sk';
+const definitionAttribute = 'def';
 
 module.exports = {
   dynamodb,
   tableName,
   assetTypeIndex,
-  assetTypeAttribute,
-  timeStampAttribute,
+  schema: {
+    partitionKey,
+    sortKey,
+    assetTypeAttribute,
+    timeStampAttribute,
+    definitionAttribute
+  },
 };
