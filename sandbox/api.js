@@ -1,17 +1,14 @@
-const AWS = require('aws-sdk');
 const express = require('express');
-
-AWS.config.update({region: process.env.TABLE_REGION});
-
-const dynamodb = new AWS.DynamoDB.DocumentClient({
-  endpoint: 'http://localhost:4566',
-});
-
-const tableName = "AMIIAssets";
 
 const apiRouter = express.Router();
 
-const assetTypeIndex = 'asset_type_index';
+const {
+  assetTypeIndex,
+  tableName,
+  dynamodb,
+  assetTypeAttribute,
+  timeStampAttribute,
+} = require('./AWSConfigs')
 
 apiRouter.get(
   `/:asset_type`,
@@ -27,13 +24,15 @@ apiRouter.get(
         ':t': asset_type,
         ...(changedSince ? {':d': changedSinceDate} : {})
       },
-      KeyConditionExpression: `ast = :t${changedSince ? ' and ts >= :d' : ''}`
+      KeyConditionExpression: `${assetTypeAttribute} = :t${
+        changedSince ? ` and ${timeStampAttribute} >= :d` : ''
+      }`
     };
 
     dynamodb.query(queryParams, (err, data) => {
       if (err) {
         res.statusCode = 500;
-        res.json({error: 'Could not load items: ' + err});
+        res.json({error: `Could not load items: ${err}`});
       } else {
         res.json(data.Items);
       }
