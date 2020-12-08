@@ -28,8 +28,7 @@ adminAPI.post(
           PutRequest: {
             Item: {
               [partitionKey]: asset.id,
-              [sortKey]: 'definition',
-              [assetTypeAttribute]: asset_type,
+              [sortKey]: asset_type,
               [definitionAttribute]: JSON.stringify(omit(asset, ['id'])),
               [timeStampAttribute]: uploadTime,
             }

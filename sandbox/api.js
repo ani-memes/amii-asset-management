@@ -7,7 +7,7 @@ const {
   tableName,
   dynamodb,
   schema : {
-    assetTypeAttribute,
+    sortKey,
     timeStampAttribute,
     definitionAttribute,
   }
@@ -27,7 +27,7 @@ apiRouter.get(
         ':t': asset_type,
         ...(changedSince ? {':d': changedSinceDate} : {})
       },
-      KeyConditionExpression: `${assetTypeAttribute} = :t${
+      KeyConditionExpression: `${sortKey} = :t${
         changedSince ? ` and ${timeStampAttribute} >= :d` : ''
       }`
     };

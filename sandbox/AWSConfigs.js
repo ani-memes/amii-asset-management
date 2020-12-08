@@ -8,9 +8,8 @@ const dynamodb = new AWS.DynamoDB.DocumentClient({
 
 const tableName = "AMIIAssets";
 
-const assetTypeIndex = 'asset_type_index';
+const assetTypeIndex = 'sort_key_index';
 
-const assetTypeAttribute = 'ast';
 const timeStampAttribute = 'ts';
 const partitionKey = 'pk';
 const sortKey = 'sk';
@@ -23,7 +22,6 @@ module.exports = {
   schema: {
     partitionKey,
     sortKey,
-    assetTypeAttribute,
     timeStampAttribute,
     definitionAttribute
   },
