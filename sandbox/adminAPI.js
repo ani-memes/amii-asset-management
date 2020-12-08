@@ -7,7 +7,6 @@ const {
   dynamodb,
   schema: {
     definitionAttribute,
-    assetTypeAttribute,
     timeStampAttribute,
     sortKey,
     partitionKey,
