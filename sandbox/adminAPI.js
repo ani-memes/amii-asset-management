@@ -1,18 +1,38 @@
 const express = require('express');
-
-const adminAPI = express.Router();
-
 const {
   tableName,
   dynamodb,
+  assetTypes: {
+    visuals
+  },
   schema: {
     definitionAttribute,
     timeStampAttribute,
     sortKey,
     partitionKey,
   }
-} = require('./AWSConfigs');
+} = require('./Config');
 const omit = require('lodash/omit')
+const {
+  handleClientResponse,
+} = require('./Tools')
+
+
+const adminAPI = express.Router();
+
+adminAPI.get('/visuals/:id', (
+  req, res) => {
+  const {id} = req.params
+  dynamodb.get({
+    TableName: tableName,
+    Key: {
+      [partitionKey]: id,
+      [sortKey]: visuals
+    }
+  }, handleClientResponse(res, a =>
+    JSON.parse(a.Item.def)
+  ));
+});
 
 adminAPI.post(
   `/:asset_type`,
@@ -36,17 +56,8 @@ adminAPI.post(
       }
     };
 
-    dynamodb.batchWrite(batchWrite, (err, data) => {
-      if (err) {
-        res.statusCode = 500;
-        res.json({error: `Could not load items: ${err}`});
-      } else {
-        res.json(data.Items);
-      }
-    });
+    dynamodb.batchWrite(batchWrite, handleClientResponse(res));
   });
 
 
 module.exports = adminAPI
-
-module.exports

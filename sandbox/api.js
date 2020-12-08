@@ -3,7 +3,7 @@ const express = require('express');
 const apiRouter = express.Router();
 
 const {
-  assetTypeIndex,
+  sortKeyIndex,
   tableName,
   dynamodb,
   schema : {
@@ -11,7 +11,7 @@ const {
     timeStampAttribute,
     definitionAttribute,
   }
-} = require('./AWSConfigs')
+} = require('./Config')
 
 apiRouter.get(
   `/:asset_type`,
@@ -22,7 +22,7 @@ apiRouter.get(
 
     const queryParams = {
       TableName: tableName,
-      IndexName: assetTypeIndex,
+      IndexName: sortKeyIndex,
       ExpressionAttributeValues: {
         ':t': asset_type,
         ...(changedSince ? {':d': changedSinceDate} : {})
