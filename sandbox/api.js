@@ -44,5 +44,3 @@ apiRouter.get(
 
 
 module.exports = apiRouter
-
-module.exports

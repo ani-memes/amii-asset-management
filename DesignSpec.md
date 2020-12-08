@@ -10,7 +10,7 @@ interface VisualMemeAsset {
   alt: string;
   cat: number[]; // assetCategories
   char: string[]; // characters appearing asset
-  aud?: string; // ID if audible asset
+  aud?: string; // ID of audible asset
 }
 ```
 #### AudibleMemeAsset
@@ -26,13 +26,13 @@ interface AnimeAsset {
   id: string; // UUID
   name: string;
   season: string;
-  chars: string[]; // UUID of characters
 }
 ```
 #### CharacterAsset
 ```ts
 interface CharacterAsset {
   id: string; // UUID
+  animeId: string; // UUID
   name: string;
   gender: string;
 }
