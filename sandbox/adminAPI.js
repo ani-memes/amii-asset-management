@@ -2,6 +2,7 @@ const express = require('express');
 const {
   tableName,
   dynamodb,
+  sortKeyIndex,
   assetTypes: {
     visuals
   },
@@ -15,8 +16,9 @@ const {
 const omit = require('lodash/omit')
 const {
   handleClientResponse,
+  extractItem,
+  extractItems,
 } = require('./Tools')
-
 
 const adminAPI = express.Router();
 
@@ -29,10 +31,26 @@ adminAPI.get('/visuals/:id', (
       [partitionKey]: id,
       [sortKey]: visuals
     }
-  }, handleClientResponse(res, a =>
-    JSON.parse(a.Item.def)
-  ));
+  }, handleClientResponse(res, extractItem));
 });
+
+adminAPI.get(
+  `/:asset_type`,
+  (req, res) => {
+    const {asset_type} = req.params
+    const queryParams = {
+      TableName: tableName,
+      IndexName: sortKeyIndex,
+      ExpressionAttributeValues: {
+        ':t': asset_type,
+      },
+      KeyConditionExpression: `${sortKey} = :t`
+    };
+    dynamodb.query(queryParams, handleClientResponse(
+      res,
+      extractItems
+    ));
+  })
 
 adminAPI.post(
   `/:asset_type`,
@@ -58,6 +76,5 @@ adminAPI.post(
 
     dynamodb.batchWrite(batchWrite, handleClientResponse(res));
   });
-
 
 module.exports = adminAPI

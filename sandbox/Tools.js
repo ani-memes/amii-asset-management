@@ -1,4 +1,11 @@
+const {
+  schema : {
+    definitionAttribute,
+  }
+} = require('./Config')
 
+const extractItems = data => data.Items.map(item => JSON.parse(item[definitionAttribute]))
+const extractItem = data => JSON.parse(data.Item[definitionAttribute])
 
 const handleClientResponse = (res, transformer) => (err, data) => {
   if (err) {
@@ -14,4 +21,6 @@ const handleClientResponse = (res, transformer) => (err, data) => {
 
 module.exports = {
   handleClientResponse,
+  extractItems,
+  extractItem
 }

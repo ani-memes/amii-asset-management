@@ -1,4 +1,5 @@
 const express = require('express');
+const {handleClientResponse, extractItems} = require("./Tools");
 
 const apiRouter = express.Router();
 
@@ -9,7 +10,6 @@ const {
   schema : {
     sortKey,
     timeStampAttribute,
-    definitionAttribute,
   }
 } = require('./Config')
 
@@ -32,14 +32,10 @@ apiRouter.get(
       }`
     };
 
-    dynamodb.query(queryParams, (err, data) => {
-      if (err) {
-        res.statusCode = 500;
-        res.json({error: `Could not load items: ${err}`});
-      } else {
-        res.json(data.Items.map(item => JSON.parse(item[definitionAttribute])));
-      }
-    });
+    dynamodb.query(queryParams, handleClientResponse(
+      res,
+      extractItems
+    ));
   });
 
 
