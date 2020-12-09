@@ -23,6 +23,8 @@ import {AudibleAssetDefinition, AudibleAssetState} from "../reducers/AudibleAsse
 import {createdAudibleAsset, RECEIVED_AUDIBLE_ASSET_LIST} from "../events/AudibleAssetEvents";
 import {omit, values} from 'lodash';
 import {push} from "connected-react-router";
+import md5 from "js-md5";
+import {readFile} from "../components/Upload";
 
 function* motivationAssetViewSaga({payload: assetId}: PayloadEvent<string>) {
   const motivationAsset = yield call(fetchAssetById, assetId);
@@ -123,20 +125,20 @@ function getPath(visualAsset: VisualMemeAsset) {
 
 function* motivationAssetUpdateSaga({payload: motivationAsset}: PayloadEvent<LocalMotivationAsset>) {
   const visualAsset = motivationAsset.visuals;
-  // todo: revisit this
-  const groupId = visualAsset.aud;
-  if (motivationAsset.audioFile) {
+  const audioFile = motivationAsset.audioFile;
+  const audioChecksum = motivationAsset.audioChecksum;
+  if (audioFile && audioChecksum) {
     yield put(createdAudibleAsset({
-      id: 'bleh', // todo this
-      file: motivationAsset.audioFile,
-      path: `${getPath(visualAsset)}${motivationAsset.audioFile.name}`
+      id: audioChecksum,
+      file: audioFile,
+      path: `${getPath(visualAsset)}${audioFile.name}`
     }));
   }
   yield put(createdVisualAsset({
     ...omit(visualAsset, 'groupId'),
     file: motivationAsset.imageFile,
     imageChecksum: motivationAsset.imageChecksum,
-    ...(!!motivationAsset.audioFile ? {aud: visualAsset.aud} : {}),
+    ...(!!(audioFile && audioChecksum) ? {aud: audioChecksum} : {}),
   }))
 }
 

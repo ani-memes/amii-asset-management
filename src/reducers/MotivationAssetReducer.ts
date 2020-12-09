@@ -28,6 +28,7 @@ export interface MotivationAsset {
 
 export interface LocalMotivationAsset extends MotivationAsset {
   audioFile?: File
+  audioChecksum?: string;
   imageChecksum?: string;
   imageFile?: File;
 }

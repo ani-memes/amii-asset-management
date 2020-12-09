@@ -3,7 +3,7 @@ import {Button, Chip, InputLabel, Paper, TextField, Typography} from "@material-
 import {makeStyles} from "@material-ui/core/styles";
 import {Autocomplete} from "@material-ui/lab";
 import ReactAudioPlayer from "react-audio-player";
-import {MotivationAsset} from "../reducers/MotivationAssetReducer";
+import {LocalMotivationAsset, MotivationAsset} from "../reducers/MotivationAssetReducer";
 import {useFormik} from "formik";
 import {MemeAssetCategory} from "../reducers/VisualAssetReducer";
 import {useDispatch, useSelector} from "react-redux";
@@ -13,6 +13,7 @@ import {selectCharacterSourceState} from "../reducers";
 import {getFileType, readFile} from "./Upload";
 import {AssetGroupKeys} from "../types/AssetTypes";
 import {updatedMotivationAsset} from "../events/MotivationAssetEvents";
+import md5 from "js-md5";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -56,7 +57,7 @@ const waifuAssetCategories = [
 ]
 
 interface Props {
-  motivationAsset: MotivationAsset;
+  motivationAsset: LocalMotivationAsset;
   isEdit?: boolean
 }
 
@@ -86,6 +87,7 @@ const MotivationAssetView: FC<Props> = ({
       categories: motivationAsset?.visuals?.cat,
       characterIds: motivationAsset?.visuals?.char,
       sound: motivationAsset?.audioHref,
+      soundChecksum: motivationAsset?.audioChecksum,
       soundFile: undefined as File | undefined,
       title: motivationAsset?.title,
     },
@@ -94,6 +96,7 @@ const MotivationAssetView: FC<Props> = ({
       dispatch(updatedMotivationAsset({
         ...motivationAsset,
         audioFile: values.soundFile,
+        audioChecksum: values.soundChecksum,
         imageHref: motivationAsset.imageHref,
         visuals: {
           ...motivationAsset.visuals,
@@ -250,9 +253,10 @@ const MotivationAssetView: FC<Props> = ({
                      const soundFile = (e?.target?.files || [])[0];
                      readFile(soundFile)
                        .then(({
-                                binaryStr
+                                binaryStr, result
                               }) => {
                          setFieldValue('soundFile', soundFile);
+                         setFieldValue('soundChecksum', md5(result));
                          setFieldValue('sound', `data:audio/${getFileType(soundFile)};base64,${binaryStr}`)
                        })
                    }}
