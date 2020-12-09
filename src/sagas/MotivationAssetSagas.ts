@@ -1,13 +1,9 @@
 import {all, call, put, select, take, takeEvery} from 'redux-saga/effects';
-import {
-  selectAudibleAssetState,
-  selectMotivationAssetState,
-  selectVisualAssetState
-} from "../reducers";
+import {selectAudibleAssetState, selectMotivationAssetState, selectVisualAssetState} from "../reducers";
 import {
   createdVisualAsset,
   createFilteredVisualS3List,
-  RECEIVED_VISUAL_ASSET_LIST,
+  RECEIVED_VISUAL_MEME_LIST,
   UPDATED_VISUAL_S3_LIST
 } from "../events/VisualAssetEvents";
 import {VisualAssetState} from "../reducers/VisualAssetReducer";
@@ -25,14 +21,11 @@ import {buildS3ObjectLink} from "../util/AWSTools";
 import {AssetGroupKeys, VisualMemeAsset} from "../types/AssetTypes";
 import {AudibleAssetDefinition, AudibleAssetState} from "../reducers/AudibleAssetReducer";
 import {createdAudibleAsset, RECEIVED_AUDIBLE_ASSET_LIST} from "../events/AudibleAssetEvents";
-import {v4 as uuid} from 'uuid';
-import {flatten, isEmpty, omit, values} from 'lodash';
-import {StringDictionary} from "../types/SupportTypes";
+import {omit, values} from 'lodash';
 import {push} from "connected-react-router";
-import md5 from "js-md5";
 
 function* motivationAssetViewSaga({payload: assetId}: PayloadEvent<string>) {
-  const motivationAsset = yield call(fetchAssetForEtag, assetId);
+  const motivationAsset = yield call(fetchAssetById, assetId);
   yield put(createCurrentMotivationAssetEvent(motivationAsset));
 }
 
@@ -41,20 +34,19 @@ function* localMotivationAssetViewSaga({payload: checkSum}: PayloadEvent<string>
   yield put(createCurrentMotivationAssetEvent(motivationAsset));
 }
 
-function* fetchAssetForEtag(assetId: string) {
-  const assetKey = assetId;
+function* fetchAssetById(assetId: string) {
   const {assets}: MotivationAssetState = yield select(selectMotivationAssetState)
-  const cachedAsset = assets[assetKey];
+  const cachedAsset = assets[assetId];
   if (cachedAsset)
     return cachedAsset;
 
   const {assets: visualAssetDefinitions}: VisualAssetState = yield select(selectVisualAssetState);
   if (!visualAssetDefinitions.length) {
     const {payload: freshVisualAssetDefinitions}: PayloadEvent<VisualMemeAsset[]> =
-      yield take(RECEIVED_VISUAL_ASSET_LIST);
-    return yield call(motivationAssetAssembly, assetKey, freshVisualAssetDefinitions)
+      yield take(RECEIVED_VISUAL_MEME_LIST);
+    return yield call(motivationAssetAssembly, assetId, freshVisualAssetDefinitions)
   } else {
-    return yield call(motivationAssetAssembly, assetKey, visualAssetDefinitions);
+    return yield call(motivationAssetAssembly, assetId, visualAssetDefinitions);
   }
 }
 
@@ -103,22 +95,20 @@ function* yieldGroupedAssets(visualAssetDefinition: VisualMemeAsset) {
   return {};
 }
 
-function getTrimmedKey(assetKey: string) {
-  return assetKey.substring(`${AssetGroupKeys.VISUAL}/`.length);
-}
-
 function* motivationAssetAssembly(
-  assetKey: string,
+  assetId: string,
   assets: VisualMemeAsset[],
 ) {
-  const trimmedKey = getTrimmedKey(assetKey);
-  const visualAssetDefinition = assets.find(assetDef => assetDef.path === trimmedKey);
+  const visualAssetDefinition = assets.find(assetDef => assetDef.id === assetId);
   if (visualAssetDefinition) {
     const groupedAssets = yield call(yieldGroupedAssets, visualAssetDefinition);
     const motivationAsset: MotivationAsset = {
       ...groupedAssets,
       visuals: visualAssetDefinition,
-      imageHref: buildS3ObjectLink(assetKey),
+      imageHref: buildS3ObjectLink(
+        // todo: consolidate path
+        `visuals/${visualAssetDefinition.path}`
+      ),
     };
 
     yield put(createdMotivationAsset(motivationAsset));
