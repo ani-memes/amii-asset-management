@@ -1,5 +1,4 @@
 import {all, call, fork, put, select, takeEvery} from 'redux-saga/effects';
-import {API} from 'aws-amplify';
 import {
   INITIALIZED_APPLICATION,
   REQUESTED_SYNC_CHANGES,
@@ -7,26 +6,16 @@ import {
   syncedChanges
 } from "../events/ApplicationLifecycleEvents";
 import {selectMotivationAssetState, selectVisualAssetState} from "../reducers";
-import {Storage} from "aws-amplify";
-import {AssetGroupKeys, Assets, S3ListObject, VisualMemeAsset} from "../types/AssetTypes";
+import {AssetGroupKeys, Assets, VisualMemeAsset} from "../types/AssetTypes";
 import {
   createdVisualAsset,
-  createReceivedVisualAssetList,
   createReceivedVisualMemeList,
   createUpdatedVisualAssetList,
   createUpdatedVisualS3List,
   DROPPED_WAIFU
 } from "../events/VisualAssetEvents";
-import {LocalVisualAssetDefinition, VisualAssetDefinition, VisualAssetState} from "../reducers/VisualAssetReducer";
-import {
-  apiGet,
-  ContentType,
-  downloadAsset,
-  extractAddedAssets,
-  syncSaga,
-  uploadAssetSaga,
-  uploadAssetsSaga
-} from "./CommonSagas";
+import {LocalVisualAssetDefinition, VisualAssetState} from "../reducers/VisualAssetReducer";
+import {apiGet, ContentType, extractAddedAssets, syncSaga, uploadAssetSaga, uploadAssetsSaga} from "./CommonSagas";
 import {omit, values} from "lodash";
 import {PayloadEvent} from "../events/Event";
 import {LocalMotivationAsset, MotivationAssetState} from "../reducers/MotivationAssetReducer";
@@ -42,8 +31,8 @@ function* fetchVisualAssetList() {
 
 
 function* visualAssetFetchSaga() {
-  const {s3List} = yield select(selectVisualAssetState)
-  if (s3List.legth) return;
+  const {assets}: VisualAssetState = yield select(selectVisualAssetState)
+  if (assets.length) return;
 
   try {
     const visualAssets = yield call(fetchVisualAssetList);
@@ -53,26 +42,15 @@ function* visualAssetFetchSaga() {
   }
 }
 
-// todo: consolidate string literals
-const VISUAL_ASSET_LIST_KEY = `${AssetGroupKeys.VISUAL}/assets.json`;
-
 const VISUAL_ASSET_BLACKLIST = [
   "file"
 ]
 
-function* getVisualAssetDefinitions() {
-  try {
-    const visualAssetDefinitions: VisualAssetDefinition[] =
-      yield call(() => downloadAsset(VISUAL_ASSET_LIST_KEY, true));
-    return visualAssetDefinitions;
-  } catch (e) {
-    console.warn("Unable to get to get visual assets 囧", e)
-  }
-}
 
 function* attemptToSyncVisualAssets() {
   try {
-    const freshVisualList: VisualAssetDefinition[] | undefined = yield call(getVisualAssetDefinitions);
+    // todo: this
+    const freshVisualList: VisualMemeAsset[] | undefined = [];
     const definedVisualList = freshVisualList || [];
     const {unsyncedAssets}: VisualAssetState = yield select(selectVisualAssetState);
     const addedVisualAssets = extractAddedAssets<LocalVisualAssetDefinition>(unsyncedAssets);
@@ -81,11 +59,11 @@ function* attemptToSyncVisualAssets() {
 
     const newVisualAssets = values(
       definedVisualList.concat(addedVisualAssets)
-        .map(asset => omit(asset, VISUAL_ASSET_BLACKLIST) as VisualAssetDefinition)
+        .map(asset => omit(asset, VISUAL_ASSET_BLACKLIST) as VisualMemeAsset)
         .reduce((accum, asset) => ({
           ...accum,
           [asset.path]: asset
-        }), {} as StringDictionary<VisualAssetDefinition>),
+        }), {} as StringDictionary<VisualMemeAsset>),
     );
 
     yield put(createUpdatedVisualAssetList(newVisualAssets));

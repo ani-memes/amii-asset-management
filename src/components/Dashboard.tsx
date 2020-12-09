@@ -41,22 +41,22 @@ const waifuPerPage = 10;
 const Dashboard: FC = () => {
   const classes = useStyles();
 
-  const {displayS3List} = useSelector(selectVisualAssetState);
+  const {displayAssetList} = useSelector(selectVisualAssetState);
   const [assetIndex, setAssetIndex] = useState(waifuPerPage);
 
-  const viewedS3Items = displayS3List.slice(0, assetIndex)
-  const hasMore = displayS3List.length > viewedS3Items.length;
+  const viewedS3Items = displayAssetList.slice(0, assetIndex)
+  const hasMore = displayAssetList.length > viewedS3Items.length;
   const fetchData = () => {
     if (hasMore) {
       setAssetIndex(prevState => {
         const nextIndex = prevState + waifuPerPage;
-        return nextIndex > displayS3List.length ? displayS3List.length : nextIndex;
+        return nextIndex > displayAssetList.length ? displayAssetList.length : nextIndex;
       })
     }
 
   };
 
-  return !displayS3List.length ? (<></>) : (
+  return !displayAssetList.length ? (<></>) : (
     <Container className={classes.container}>
       <InfiniteScroll
         loadMore={fetchData}

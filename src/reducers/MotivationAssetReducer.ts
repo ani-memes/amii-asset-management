@@ -1,7 +1,6 @@
 import {LOGGED_OFF} from '../events/SecurityEvents';
 import {CREATED_VISUAL_ASSET, DROPPED_WAIFU} from "../events/VisualAssetEvents";
 import {StringDictionary} from "../types/SupportTypes";
-import {VisualAssetDefinition} from "./VisualAssetReducer";
 import {AudibleAssetDefinition} from "./AudibleAssetReducer";
 import {
   CLEANED_UP_ASSETS,
@@ -11,7 +10,7 @@ import {
   UPDATED_MOTIVATION_ASSET
 } from "../events/MotivationAssetEvents";
 import {omit, values} from 'lodash';
-import {AssetGroupKeys, Assets} from "../types/AssetTypes";
+import {AssetGroupKeys, Assets, VisualMemeAsset} from "../types/AssetTypes";
 import {CREATED_ANIME, CREATED_WAIFU, UPDATED_ANIME, UPDATED_WAIFU} from "../events/CharacterSourceEvents";
 import {COMPLETED_SYNC_ATTEMPT, STARTED_SYNC_ATTEMPT, SYNCED_ASSET} from "../events/ApplicationLifecycleEvents";
 import {CREATED_AUDIBLE_ASSET} from "../events/AudibleAssetEvents";
@@ -19,7 +18,7 @@ import {CREATED_AUDIBLE_ASSET} from "../events/AudibleAssetEvents";
 
 export interface MotivationAsset {
   imageHref: string;
-  visuals: VisualAssetDefinition;
+  visuals: VisualMemeAsset;
 
   // grouped assets
   audioHref?: string;

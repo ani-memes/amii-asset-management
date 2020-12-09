@@ -11,7 +11,7 @@ import {
   RECEIVED_VISUAL_ASSET_LIST,
   UPDATED_VISUAL_S3_LIST
 } from "../events/VisualAssetEvents";
-import {VisualAssetDefinition, VisualAssetState} from "../reducers/VisualAssetReducer";
+import {VisualAssetState} from "../reducers/VisualAssetReducer";
 import {
   createCurrentMotivationAssetEvent,
   createdMotivationAsset,
@@ -23,7 +23,7 @@ import {
 import {PayloadEvent} from "../events/Event";
 import {LocalMotivationAsset, MotivationAsset, MotivationAssetState} from "../reducers/MotivationAssetReducer";
 import {buildS3ObjectLink} from "../util/AWSTools";
-import {AssetGroupKeys, S3ListObject, VisualMemeAsset} from "../types/AssetTypes";
+import {AssetGroupKeys, VisualMemeAsset} from "../types/AssetTypes";
 import {AudibleAssetDefinition, AudibleAssetState} from "../reducers/AudibleAssetReducer";
 import {createdAudibleAsset, RECEIVED_AUDIBLE_ASSET_LIST} from "../events/AudibleAssetEvents";
 import {v4 as uuid} from 'uuid';
@@ -32,6 +32,7 @@ import {flatten, isEmpty, omit, values} from 'lodash';
 import {StringDictionary} from "../types/SupportTypes";
 import {LOADED_ALL_TEXT_ASSETS} from "../events/TextAssetEvents";
 import {push} from "connected-react-router";
+import md5 from "js-md5";
 
 function* motivationAssetViewSaga({payload: assetId}: PayloadEvent<string>) {
   const motivationAsset = yield call(fetchAssetForEtag, assetId);
@@ -52,7 +53,8 @@ function* fetchAssetForEtag(assetId: string) {
 
   const {assets: visualAssetDefinitions}: VisualAssetState = yield select(selectVisualAssetState);
   if (!visualAssetDefinitions.length) {
-    const {payload: freshVisualAssetDefinitions}: PayloadEvent<VisualAssetDefinition[]> = yield take(RECEIVED_VISUAL_ASSET_LIST);
+    const {payload: freshVisualAssetDefinitions}: PayloadEvent<VisualMemeAsset[]> =
+      yield take(RECEIVED_VISUAL_ASSET_LIST);
     return yield call(motivationAssetAssembly, assetKey, freshVisualAssetDefinitions)
   } else {
     return yield call(motivationAssetAssembly, assetKey, visualAssetDefinitions);
@@ -66,8 +68,9 @@ function* fetchAssetForChecksum(checkSum: string) {
     return cachedAsset;
 }
 
+// todo: this
 function getAudibleMotivationAssets(audibleAssets: AudibleAssetDefinition[], groupId: string) {
-  const relevantAudibleAsset = audibleAssets.find(asset => asset.groupId === groupId);
+  const relevantAudibleAsset = audibleAssets.find(asset => asset.id === groupId);
   if (relevantAudibleAsset) {
     return {
       audio: relevantAudibleAsset,
@@ -90,19 +93,19 @@ function getTextMotivationAssets(textAssets: StringDictionary<TextualMotivationA
   return {};
 }
 
-function* resolveGroupedAudibleAsset(groupId: string) {
+function* resolveGroupedAudibleAsset(audibleAssetId: string) {
   const {assets: cachedAssets, unsyncedAssets}: AudibleAssetState = yield select(selectAudibleAssetState)
   if (cachedAssets.length) {
-    // todo: viewing unsynced grouped assets
-    const assetFromCache = getAudibleMotivationAssets(cachedAssets, groupId);
+    // todo: viewing unsynced grouped assetsTemp
+    const assetFromCache = getAudibleMotivationAssets(cachedAssets, audibleAssetId);
     return assetFromCache || getAudibleMotivationAssets(
       values(unsyncedAssets)
         .map(cachedAsset => cachedAsset.asset)
-      , groupId);
+      , audibleAssetId);
   }
 
   const {payload: audibleAssets}: PayloadEvent<AudibleAssetDefinition[]> = yield take(RECEIVED_AUDIBLE_ASSET_LIST);
-  return getAudibleMotivationAssets(audibleAssets, groupId);
+  return getAudibleMotivationAssets(audibleAssets, audibleAssetId);
 
 }
 
@@ -119,20 +122,10 @@ function* resolveGroupedTextAsset(groupId: string) {
 
 }
 
-function* yieldGroupedAssets(visualAssetDefinition: VisualAssetDefinition) {
-  const groupId = visualAssetDefinition.groupId;
-  if (groupId) {
-    const {
-      audibleAssets,
-      textAssets,
-    } = yield all({
-      audibleAssets: call(resolveGroupedAudibleAsset, groupId),
-      textAssets: call(resolveGroupedTextAsset, groupId),
-    })
-    return {
-      ...audibleAssets,
-      ...textAssets,
-    }
+function* yieldGroupedAssets(visualAssetDefinition: VisualMemeAsset) {
+  const audibleAssetId = visualAssetDefinition.aud;
+  if (audibleAssetId) {
+    return yield call(resolveGroupedAudibleAsset, audibleAssetId)
   }
 
   return {};
@@ -144,7 +137,7 @@ function getTrimmedKey(assetKey: string) {
 
 function* motivationAssetAssembly(
   assetKey: string,
-  assets: VisualAssetDefinition[],
+  assets: VisualMemeAsset[],
 ) {
   const trimmedKey = getTrimmedKey(assetKey);
   const visualAssetDefinition = assets.find(assetDef => assetDef.path === trimmedKey);
@@ -161,19 +154,19 @@ function* motivationAssetAssembly(
   }
 }
 
-function getPath(visualAsset: VisualAssetDefinition) {
+function getPath(visualAsset: VisualMemeAsset) {
   const directory = visualAsset.path.split("/")[0];
   return directory.indexOf('.') < 0 && !!directory ? directory : '';
 }
 
 function* motivationAssetUpdateSaga({payload: motivationAsset}: PayloadEvent<LocalMotivationAsset>) {
   const visualAsset = motivationAsset.visuals;
-  const groupId = visualAsset.groupId || uuid();
+  // todo: revisit this
+  const groupId = visualAsset.aud;
   if (motivationAsset.audioFile) {
     yield put(createdAudibleAsset({
-      groupId,
+      id: 'bleh', // todo this
       file: motivationAsset.audioFile,
-      categories: visualAsset.categories,
       path: `${getPath(visualAsset)}${motivationAsset.audioFile.name}`
     }));
   }
@@ -181,7 +174,7 @@ function* motivationAssetUpdateSaga({payload: motivationAsset}: PayloadEvent<Loc
     ...omit(visualAsset, 'groupId'),
     file: motivationAsset.imageFile,
     imageChecksum: motivationAsset.imageChecksum,
-    ...(!!motivationAsset.audioFile || !!motivationAsset.title ? {groupId} : {}),
+    ...(!!motivationAsset.audioFile ? {aud: visualAsset.aud} : {}),
   }))
 }
 
@@ -197,13 +190,6 @@ function containsKeyword(
   return !!SEARCH_KEYS.map(key => asset[key])
     .map(field => field + '')
     .find(fieldValue => fieldValue.indexOf(searchKeyword) > -1)
-}
-
-function getS3Object(
-  asset: VisualAssetDefinition,
-  s3List: S3ListObject[]
-): S3ListObject | undefined {
-  return s3List.find(s3Object => getTrimmedKey(s3Object.key) === asset.path);
 }
 
 function* filterAssets(keyword: string, s3List: VisualMemeAsset[]) {
@@ -224,8 +210,8 @@ function* updateSearch({payload: s3List}: PayloadEvent<VisualMemeAsset[]>) {
 }
 
 function* motivationAssetSearchSaga({payload: keyword}: PayloadEvent<string>) {
-  const {s3List}: VisualAssetState = yield select(selectVisualAssetState);
-  yield call(filterAssets, keyword, s3List);
+  const {assets}: VisualAssetState = yield select(selectVisualAssetState);
+  yield call(filterAssets, keyword, assets);
   yield put(push("/"));
 }
 

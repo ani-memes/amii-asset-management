@@ -1,9 +1,9 @@
 import {LOGGED_OFF} from '../events/SecurityEvents';
-import {AssetDefinition, LocalAsset, S3ListObject} from "../types/AssetTypes";
+import {AssetDefinition, AudibleMemeAsset, LocalAsset, S3ListObject} from "../types/AssetTypes";
 import {CREATED_AUDIBLE_ASSET, RECEIVED_AUDIBLE_ASSET_LIST, RECEIVED_WAIFU_LIST} from "../events/AudibleAssetEvents";
 import {StringDictionary, SyncType, UnsyncedAsset} from "../types/SupportTypes";
 
-export type AudibleAssetDefinition = AssetDefinition
+export type AudibleAssetDefinition = AudibleMemeAsset
 
 export interface LocalAudibleAssetDefinition extends AudibleAssetDefinition, LocalAsset {
 }

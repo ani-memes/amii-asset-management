@@ -24,18 +24,15 @@ export enum Assets {
 }
 
 export interface AssetDefinition {
+  id: string; // MD5 checksum
   path: string;
-  groupId?: string;
-  categories: MemeAssetCategory[];
 }
 
 export interface LocalAsset {
   file?: File;
 }
 
-export interface VisualMemeAsset {
-  id: string; // MD5 checksum
-  path: string;
+export interface VisualMemeAsset extends AssetDefinition {
   alt: string;
   cat: MemeAssetCategory[]; // assetCategories
   char: string[]; // characters appearing asset

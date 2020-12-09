@@ -1,16 +1,23 @@
 import {all, call, fork, put, select, takeEvery} from 'redux-saga/effects';
 import {INITIALIZED_APPLICATION, REQUESTED_SYNC_CHANGES, syncedChanges} from "../events/ApplicationLifecycleEvents";
-import {selectAudibleAssetState, selectVisualAssetState} from "../reducers";
+import {selectAudibleAssetState} from "../reducers";
 import {Storage} from "aws-amplify";
 import {AssetGroupKeys, Assets, S3ListObject} from "../types/AssetTypes";
 import {createReceivedAudibleAssetList, createReceivedAudibleS3List} from "../events/AudibleAssetEvents";
 import {AudibleAssetDefinition, AudibleAssetState, LocalAudibleAssetDefinition} from "../reducers/AudibleAssetReducer";
-import {ContentType, downloadAsset, extractAddedAssets, syncSaga, uploadAssetSaga, uploadAssetsSaga} from "./CommonSagas";
+import {
+  ContentType,
+  downloadAsset,
+  extractAddedAssets,
+  syncSaga,
+  uploadAssetSaga,
+  uploadAssetsSaga
+} from "./CommonSagas";
 import {omit, values} from "lodash";
 
 function* audibleAssetFetchSaga() {
-  const {s3List} = yield select(selectVisualAssetState)
-  if (s3List.legth) return;
+  const {s3List}: AudibleAssetState = yield select(selectAudibleAssetState)
+  if (s3List.length) return;
 
   yield fork(assetJsonSaga);
 

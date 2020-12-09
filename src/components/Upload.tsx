@@ -110,22 +110,23 @@ const Upload: FC = () => {
                   imageDimensions,
                 })))
             .then(({
+              // todo: revisit this
                      binaryStr, result, imageDimensions
                    }) => {
+              const imageChecksum = md5(result);
               return ([
                 ...others,
                 {
                   imageFile: next,
-                  imageChecksum: md5(result),
+                  imageChecksum,
                   imageHref: getImageHref(next, binaryStr),
                   visuals: {
-                    imageDimensions,
+                    id: imageChecksum,
                     path: `${next.name}`,
-                    imageAlt: '',
-                    categories: [],
-                    characterIds: [],
-                    characters: []
-                  }
+                    alt: '',
+                    cat: [],
+                    char: [],
+                  },
                 } as LocalMotivationAsset
               ])
             })), Promise.resolve<LocalMotivationAsset[]>([]))

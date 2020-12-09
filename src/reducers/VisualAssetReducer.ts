@@ -42,28 +42,20 @@ export interface Waifu extends HasId {
   animeId: string;
 }
 
-export interface VisualAssetDefinition extends AssetDefinition {
-  imageAlt: string;
-  imageDimensions: ImageDimensions;
-  characterIds?: string[]
-  characters?: string[];
-}
 
-export interface LocalVisualAssetDefinition extends VisualAssetDefinition, LocalAsset {
+export interface LocalVisualAssetDefinition extends VisualMemeAsset, LocalAsset {
   imageChecksum?: string;
 }
 
 export type VisualAssetState = {
-  assets: VisualAssetDefinition[];
-  s3List: VisualMemeAsset[];
-  displayS3List: VisualMemeAsset[];
+  assets: VisualMemeAsset[];
+  displayAssetList: VisualMemeAsset[];
   unsyncedAssets: StringDictionary<UnsyncedAsset<LocalVisualAssetDefinition>>
 };
 
 export const INITIAL_VISUAL_ASSET_STATE: VisualAssetState = {
   assets: [],
-  s3List: [],
-  displayS3List: [],
+  displayAssetList: [],
   unsyncedAssets: {},
 };
 

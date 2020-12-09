@@ -1,7 +1,7 @@
 import {PayloadEvent} from './Event';
-import {S3ListObject, VisualMemeAsset} from "../types/AssetTypes";
+import {VisualMemeAsset} from "../types/AssetTypes";
 import {LocalMotivationAsset} from "../reducers/MotivationAssetReducer";
-import {LocalVisualAssetDefinition, VisualAssetDefinition} from "../reducers/VisualAssetReducer";
+import {LocalVisualAssetDefinition} from "../reducers/VisualAssetReducer";
 
 export const RECEIVED_VISUAL_MEME_LIST = 'RECEIVED_VISUAL_MEME_LIST';
 export const UPDATED_VISUAL_S3_LIST = 'UPDATED_VISUAL_S3_LIST';
@@ -33,15 +33,15 @@ export const createFilteredVisualS3List = (
 });
 
 export const createReceivedVisualAssetList = (
-  visualAssets: VisualAssetDefinition[],
-): PayloadEvent<VisualAssetDefinition[]> => ({
+  visualAssets: VisualMemeAsset[],
+): PayloadEvent<VisualMemeAsset[]> => ({
   type: RECEIVED_VISUAL_ASSET_LIST,
   payload: visualAssets,
 });
 
 export const createUpdatedVisualAssetList = (
-  visualAssets: VisualAssetDefinition[],
-): PayloadEvent<VisualAssetDefinition[]> => ({
+  visualAssets: VisualMemeAsset[],
+): PayloadEvent<VisualMemeAsset[]> => ({
   type: UPDATED_VISUAL_ASSET_LIST,
   payload: visualAssets,
 });

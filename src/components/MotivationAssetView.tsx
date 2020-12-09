@@ -82,9 +82,9 @@ const MotivationAssetView: FC<Props> = ({
   } = useFormik({
     initialValues: {
       objectKey: motivationAsset?.visuals?.path,
-      imageAlt: motivationAsset?.visuals?.imageAlt,
-      categories: motivationAsset?.visuals?.categories,
-      characterIds: motivationAsset?.visuals?.characterIds,
+      imageAlt: motivationAsset?.visuals?.alt,
+      categories: motivationAsset?.visuals?.cat,
+      characterIds: motivationAsset?.visuals?.char,
       sound: motivationAsset?.audioHref,
       soundFile: undefined as File | undefined,
       title: motivationAsset?.title,
@@ -98,9 +98,9 @@ const MotivationAssetView: FC<Props> = ({
         visuals: {
           ...motivationAsset.visuals,
           path: values.objectKey,
-          imageAlt: values.imageAlt || '',
-          categories: values.categories,
-          characterIds: values.characterIds
+          alt: values.imageAlt || '',
+          cat: values.categories,
+          char: values.characterIds
         }
       }))
       setSubmitting(false);
@@ -115,15 +115,12 @@ const MotivationAssetView: FC<Props> = ({
     value: bestGirl.id,
   })), [waifu]);
 
-  const imageDimensions = motivationAsset.visuals?.imageDimensions;
   return <div style={{display: 'flex', flexDirection: "column", flexGrow: 1}}>
     <div style={{display: 'flex', margin: '0 auto', flexDirection: 'row', flexWrap: 'wrap', width: '100%'}}>
       <div className={classes.waifuContainer}>
         <Paper className={classes.paper}>
-          <img src={motivationAsset.imageHref} alt={motivationAsset.visuals.imageAlt}/>
+          <img src={motivationAsset.imageHref} alt={motivationAsset.visuals.alt}/>
         </Paper>
-        <Typography variant={"subtitle1"} style={{marginTop: '1rem'}}>Image Dimensions:{' '}
-          {imageDimensions?.width}x{imageDimensions?.height}</Typography>
       </div>
       <div className={classes.waifuAssetDetails}>
         <div style={{maxWidth: 500, marginRight: '2rem', minWidth: 300}}>
