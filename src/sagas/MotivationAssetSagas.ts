@@ -2,9 +2,8 @@ import {all, call, put, select, take, takeEvery} from 'redux-saga/effects';
 import {selectAudibleAssetState, selectMotivationAssetState, selectVisualAssetState} from "../reducers";
 import {
   createdVisualAsset,
-  createFilteredVisualS3List,
-  RECEIVED_VISUAL_MEME_LIST,
-  UPDATED_VISUAL_S3_LIST
+  createFilteredVisualAssetList,
+  RECEIVED_VISUAL_MEME_LIST, UPDATED_VISUAL_ASSET_LIST,
 } from "../events/VisualAssetEvents";
 import {VisualAssetState} from "../reducers/VisualAssetReducer";
 import {
@@ -23,8 +22,6 @@ import {AudibleAssetDefinition, AudibleAssetState} from "../reducers/AudibleAsse
 import {createdAudibleAsset, RECEIVED_AUDIBLE_ASSET_LIST} from "../events/AudibleAssetEvents";
 import {omit, values} from 'lodash';
 import {push} from "connected-react-router";
-import md5 from "js-md5";
-import {readFile} from "../components/Upload";
 
 function* motivationAssetViewSaga({payload: assetId}: PayloadEvent<string>) {
   const motivationAsset = yield call(fetchAssetById, assetId);
@@ -156,21 +153,21 @@ function containsKeyword(
     .find(fieldValue => fieldValue.indexOf(searchKeyword) > -1)
 }
 
-function* filterAssets(keyword: string, s3List: VisualMemeAsset[]) {
+function* filterAssets(keyword: string, visualMemeAssets: VisualMemeAsset[]) {
   if (!keyword) {
-    yield put(createFilteredVisualS3List(s3List))
+    yield put(createFilteredVisualAssetList(visualMemeAssets))
   } else {
     const searchKeyword = keyword.toLowerCase();
-    yield put(createFilteredVisualS3List(
-      s3List.filter(asset => containsKeyword(asset, searchKeyword))
+    yield put(createFilteredVisualAssetList(
+      visualMemeAssets.filter(asset => containsKeyword(asset, searchKeyword))
         .filter(Boolean) as VisualMemeAsset[]
     ))
   }
 }
 
-function* updateSearch({payload: s3List}: PayloadEvent<VisualMemeAsset[]>) {
+function* updateSearch({payload: visualMemeAssets}: PayloadEvent<VisualMemeAsset[]>) {
   const {searchTerm}: MotivationAssetState = yield select(selectMotivationAssetState);
-  yield call(filterAssets, searchTerm || '', s3List);
+  yield call(filterAssets, searchTerm || '', visualMemeAssets);
 }
 
 function* motivationAssetSearchSaga({payload: keyword}: PayloadEvent<string>) {
@@ -184,7 +181,7 @@ function* motivationAssetSagas() {
   yield takeEvery(VIEWED_UPLOADED_ASSET, localMotivationAssetViewSaga);
   yield takeEvery(UPDATED_MOTIVATION_ASSET, motivationAssetUpdateSaga);
   yield takeEvery(SEARCHED_FOR_ASSET, motivationAssetSearchSaga);
-  yield takeEvery(UPDATED_VISUAL_S3_LIST, updateSearch);
+  yield takeEvery(UPDATED_VISUAL_ASSET_LIST, updateSearch);
 }
 
 export default function* (): Generator {

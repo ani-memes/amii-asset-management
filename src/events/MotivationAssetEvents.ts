@@ -10,17 +10,17 @@ export const SEARCHED_FOR_ASSET = 'SEARCHED_FOR_ASSET';
 export const CLEANED_UP_ASSETS = 'CLEANED_UP_ASSETS';
 
 export const createViewedExistingAssetEvent = (
-  s3Etag: string
+  assetId: string
 ): PayloadEvent<string> => ({
   type: VIEWED_EXISTING_ASSET,
-  payload: s3Etag,
+  payload: assetId,
 });
 
 export const createViewedLocalAssetEvent = (
-  s3Etag: string
+  assetId: string
 ): PayloadEvent<string> => ({
   type: VIEWED_UPLOADED_ASSET,
-  payload: s3Etag,
+  payload: assetId,
 });
 
 export const searchForItem = (

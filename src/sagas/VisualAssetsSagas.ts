@@ -11,7 +11,6 @@ import {
   createdVisualAsset,
   createReceivedVisualMemeList,
   createUpdatedVisualAssetList,
-  createUpdatedVisualS3List,
   DROPPED_WAIFU
 } from "../events/VisualAssetEvents";
 import {LocalVisualAssetDefinition, VisualAssetState} from "../reducers/VisualAssetReducer";
@@ -97,7 +96,7 @@ function* localAssetCleanupSaga({payload: syncedAsset}: PayloadEvent<Assets>) {
     ));
     // todo: why dis?
     const newAssetList = yield call(fetchVisualAssetList);
-    yield put(createUpdatedVisualS3List(newAssetList))
+    yield put(createUpdatedVisualAssetList(newAssetList))
   }
 }
 

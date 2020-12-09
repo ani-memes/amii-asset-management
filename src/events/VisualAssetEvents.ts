@@ -4,7 +4,6 @@ import {LocalMotivationAsset} from "../reducers/MotivationAssetReducer";
 import {LocalVisualAssetDefinition} from "../reducers/VisualAssetReducer";
 
 export const RECEIVED_VISUAL_MEME_LIST = 'RECEIVED_VISUAL_MEME_LIST';
-export const UPDATED_VISUAL_S3_LIST = 'UPDATED_VISUAL_S3_LIST';
 export const RECEIVED_VISUAL_ASSET_LIST = 'RECEIVED_VISUAL_ASSET_LIST';
 export const UPDATED_VISUAL_ASSET_LIST = 'UPDATED_VISUAL_ASSET_LIST';
 export const DROPPED_WAIFU = 'DROPPED_WAIFU';
@@ -18,25 +17,11 @@ export const createReceivedVisualMemeList = (
   payload: visualAssets,
 });
 
-export const createUpdatedVisualS3List = (
-  visualAssets: VisualMemeAsset[],
-): PayloadEvent<VisualMemeAsset[]> => ({
-  type: UPDATED_VISUAL_S3_LIST,
-  payload: visualAssets,
-});
-
-export const createFilteredVisualS3List = (
+export const createFilteredVisualAssetList = (
   searchForAssets: VisualMemeAsset[],
 ): PayloadEvent<VisualMemeAsset[]> => ({
   type: FILTERED_VISUAL_ASSETS,
   payload: searchForAssets,
-});
-
-export const createReceivedVisualAssetList = (
-  visualAssets: VisualMemeAsset[],
-): PayloadEvent<VisualMemeAsset[]> => ({
-  type: RECEIVED_VISUAL_ASSET_LIST,
-  payload: visualAssets,
 });
 
 export const createUpdatedVisualAssetList = (

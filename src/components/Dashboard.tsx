@@ -44,8 +44,8 @@ const Dashboard: FC = () => {
   const {displayAssetList} = useSelector(selectVisualAssetState);
   const [assetIndex, setAssetIndex] = useState(waifuPerPage);
 
-  const viewedS3Items = displayAssetList.slice(0, assetIndex)
-  const hasMore = displayAssetList.length > viewedS3Items.length;
+  const viewedVisualAssets = displayAssetList.slice(0, assetIndex)
+  const hasMore = displayAssetList.length > viewedVisualAssets.length;
   const fetchData = () => {
     if (hasMore) {
       setAssetIndex(prevState => {
@@ -66,7 +66,7 @@ const Dashboard: FC = () => {
         <Grid container spacing={3}>
 
           {
-            viewedS3Items.map(visualMemeAsset => (
+            viewedVisualAssets.map(visualMemeAsset => (
               <Grid item key={visualMemeAsset.id} xs={6}>
                 <Link style={{textDecoration: 'none', color: 'inherit'}} to={`/assets/view/${visualMemeAsset.id}`}>
                   <WaifuDisplay href={buildS3ObjectLink(
