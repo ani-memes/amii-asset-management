@@ -69,7 +69,10 @@ const Dashboard: FC = () => {
             viewedS3Items.map(visualMemeAsset => (
               <Grid item key={visualMemeAsset.id} xs={6}>
                 <Link style={{textDecoration: 'none', color: 'inherit'}} to={`/assets/view/${visualMemeAsset.id}`}>
-                  <WaifuDisplay href={buildS3ObjectLink(visualMemeAsset.path)}/>
+                  <WaifuDisplay href={buildS3ObjectLink(
+                    // todo: consolidate
+                    `visuals/${visualMemeAsset.path}`
+                  )}/>
                 </Link>
               </Grid>
             ))

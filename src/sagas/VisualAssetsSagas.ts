@@ -15,8 +15,8 @@ import {
   DROPPED_WAIFU
 } from "../events/VisualAssetEvents";
 import {LocalVisualAssetDefinition, VisualAssetState} from "../reducers/VisualAssetReducer";
-import {apiGet, ContentType, extractAddedAssets, syncSaga, uploadAssetSaga, uploadAssetsSaga} from "./CommonSagas";
-import {omit, values} from "lodash";
+import {apiGet, apiPost, extractAddedAssets, syncSaga, uploadAssetsSaga} from "./CommonSagas";
+import {pick, values} from "lodash";
 import {PayloadEvent} from "../events/Event";
 import {LocalMotivationAsset, MotivationAssetState} from "../reducers/MotivationAssetReducer";
 import {cleanedUpMotivationAssets} from "../events/MotivationAssetEvents";
@@ -38,40 +38,39 @@ function* visualAssetFetchSaga() {
     const visualAssets = yield call(fetchVisualAssetList);
     yield put(createReceivedVisualMemeList(visualAssets));
   } catch (e) {
-    console.warn("Unable to get visual asset s3 list", e)
+    console.warn("Unable to get visual asset list", e)
   }
 }
 
-const VISUAL_ASSET_BLACKLIST = [
-  "file"
+const VISUAL_ASSET_WHITELIST = [
+  'id',
+  'path',
+  'alt',
+  'cat',
+  'char',
+  'aud',
 ]
 
-
+// todo: this is just for dropped assets
 function* attemptToSyncVisualAssets() {
   try {
-    // todo: this
-    const freshVisualList: VisualMemeAsset[] | undefined = [];
-    const definedVisualList = freshVisualList || [];
-    const {unsyncedAssets}: VisualAssetState = yield select(selectVisualAssetState);
+    const {assets, unsyncedAssets}: VisualAssetState = yield select(selectVisualAssetState);
     const addedVisualAssets = extractAddedAssets<LocalVisualAssetDefinition>(unsyncedAssets);
 
     yield call(uploadAssetsSaga, AssetGroupKeys.VISUAL, addedVisualAssets);
 
-    const newVisualAssets = values(
-      definedVisualList.concat(addedVisualAssets)
-        .map(asset => omit(asset, VISUAL_ASSET_BLACKLIST) as VisualMemeAsset)
+    const newVisualAssets = addedVisualAssets.map((asset =>
+      pick(asset, VISUAL_ASSET_WHITELIST) as VisualMemeAsset));
+
+    yield call(apiPost, '/assets/visuals', newVisualAssets);
+    yield put(syncedChanges(Assets.VISUAL));
+    yield put(createUpdatedVisualAssetList(values(
+      assets.concat(addedVisualAssets)
         .reduce((accum, asset) => ({
           ...accum,
           [asset.path]: asset
         }), {} as StringDictionary<VisualMemeAsset>),
-    );
-
-    yield put(createUpdatedVisualAssetList(newVisualAssets));
-    yield call(uploadAssetSaga,
-      AssetGroupKeys.VISUAL, 'assets.json', // todo: consolidate string literals2
-      JSON.stringify(newVisualAssets), ContentType.JSON
-    );
-    yield put(syncedChanges(Assets.VISUAL));
+    )));
   } catch (e) {
     console.warn("unable to sync images for raisins", e)
   }
@@ -96,6 +95,7 @@ function* localAssetCleanupSaga({payload: syncedAsset}: PayloadEvent<Assets>) {
       values(assets)
         .filter(asset => !asset.imageChecksum)
     ));
+    // todo: why dis?
     const newAssetList = yield call(fetchVisualAssetList);
     yield put(createUpdatedVisualS3List(newAssetList))
   }

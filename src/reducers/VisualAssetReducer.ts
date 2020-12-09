@@ -66,13 +66,13 @@ const visualAssetReducer = (state: VisualAssetState = INITIAL_VISUAL_ASSET_STATE
     case RECEIVED_VISUAL_MEME_LIST:
       return {
         ...state,
-        s3List: action.payload,
-        displayS3List: action.payload,
+        assets: action.payload,
+        displayAssetList: action.payload,
       };
     case UPDATED_VISUAL_S3_LIST:
       return {
         ...state,
-        s3List: action.payload,
+        assets: action.payload,
       };
     case UPDATED_VISUAL_ASSET_LIST:
     case RECEIVED_VISUAL_ASSET_LIST:
@@ -84,7 +84,7 @@ const visualAssetReducer = (state: VisualAssetState = INITIAL_VISUAL_ASSET_STATE
     case FILTERED_VISUAL_ASSETS: {
       return {
         ...state,
-        displayS3List: action.payload
+        displayAssetList: action.payload
       }
     }
     case CREATED_VISUAL_ASSET: {
