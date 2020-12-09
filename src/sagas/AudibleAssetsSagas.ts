@@ -4,16 +4,8 @@ import {selectAudibleAssetState} from "../reducers";
 import {AssetGroupKeys, Assets} from "../types/AssetTypes";
 import {createReceivedAudibleAssetList} from "../events/AudibleAssetEvents";
 import {AudibleAssetDefinition, AudibleAssetState, LocalAudibleAssetDefinition} from "../reducers/AudibleAssetReducer";
-import {
-  apiGet,
-  ContentType,
-  downloadAsset,
-  extractAddedAssets,
-  syncSaga,
-  uploadAssetSaga,
-  uploadAssetsSaga
-} from "./CommonSagas";
-import {omit, values} from "lodash";
+import {apiGet, apiPost, extractAddedAssets, syncSaga, uploadAssetsSaga} from "./CommonSagas";
+import pick from "lodash/pick";
 
 function* fetchAudibleAssetList() {
   const allAudibleAssets: AudibleAssetDefinition[] = yield call(() =>
@@ -21,7 +13,6 @@ function* fetchAudibleAssetList() {
   );
   return allAudibleAssets;
 }
-
 
 function* audibleAssetFetchSaga() {
   const {assets}: AudibleAssetState = yield select(selectAudibleAssetState)
@@ -35,46 +26,26 @@ function* audibleAssetFetchSaga() {
   }
 }
 
-const AUDIBLE_ASSET_LIST_KEY = `${AssetGroupKeys.AUDIBLE}/assets.json`;
-
-const AUDIBLE_ASSET_BLACKLIST = [
-  "file"
+const AUDIBLE_ASSET_WHITELIST = [
+  'id',
+  'path',
 ]
 
+// todo: this is just for dropped assets
 function* attemptToSyncAudibleAssets() {
   try {
-    const freshAudibleList: AudibleAssetDefinition[] | undefined = yield call(getAudibleAssetDefinitions);
-    const definedAudibleList = freshAudibleList || [];
     const {unsyncedAssets}: AudibleAssetState = yield select(selectAudibleAssetState);
     const addedAudibleAssets = extractAddedAssets<LocalAudibleAssetDefinition>(unsyncedAssets);
 
     yield call(uploadAssetsSaga, AssetGroupKeys.AUDIBLE, addedAudibleAssets);
 
-    const newAudibleAssets = values(
-      definedAudibleList.concat(addedAudibleAssets)
-        .map(asset => omit(asset, AUDIBLE_ASSET_BLACKLIST) as AudibleAssetDefinition)
-        .reduce((accum, asset) => ({
-          ...accum,
-          [asset.path]: asset
-        }), {}),
-    );
-    yield call(uploadAssetSaga,
-      AssetGroupKeys.AUDIBLE, 'assets.json', // todo: consolidate string literal
-      JSON.stringify(newAudibleAssets), ContentType.JSON
-    );
+    const newAudibleAssets = addedAudibleAssets.map(asset =>
+      pick(asset, AUDIBLE_ASSET_WHITELIST) as AudibleAssetDefinition);
+
+    yield call(apiPost, '/assets/audible', newAudibleAssets);
     yield put(syncedChanges(Assets.AUDIBLE));
   } catch (e) {
     console.warn("unable to sync audio for raisins", e)
-  }
-}
-
-function* getAudibleAssetDefinitions() {
-  try {
-    const audibleAssetDefinitions: AudibleAssetDefinition[] = yield call(() =>
-      downloadAsset(AUDIBLE_ASSET_LIST_KEY, true));
-    return audibleAssetDefinitions;
-  } catch (e) {
-    console.warn("Unable to get to get audible assets 囧", e)
   }
 }
 
