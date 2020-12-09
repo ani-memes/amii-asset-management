@@ -6,7 +6,6 @@ import {History} from 'history';
 import visualAssetReducer, {VisualAssetState} from "./VisualAssetReducer";
 import motivationAssetReducer, {MotivationAssetState} from "./MotivationAssetReducer";
 import audibleAssetReducer, {AudibleAssetState} from "./AudibleAssetReducer";
-import textAssetReducer, {TextAssetState} from "./TextAssetReducer";
 import characterSourceReducer, {CharacterSourceState} from "./CharacterSourceReducer";
 
 export interface GlobalState {
@@ -14,7 +13,6 @@ export interface GlobalState {
   router: RouterState;
   motivationAssets: MotivationAssetState;
   visualAssets: VisualAssetState;
-  textAssets: TextAssetState;
   characterSources: CharacterSourceState;
   audibleAssets: AudibleAssetState;
 }
@@ -26,7 +24,6 @@ const rootReducer = (history: History<any>): Reducer<any, any> =>
     router: connectRouter(history),
     motivationAssets: motivationAssetReducer,
     visualAssets: visualAssetReducer,
-    textAssets: textAssetReducer,
     characterSources: characterSourceReducer,
     audibleAssets: audibleAssetReducer,
   });
@@ -45,9 +42,6 @@ export const selectVisualAssetState = (globalState: GlobalState): VisualAssetSta
 
 export const selectAudibleAssetState = (globalState: GlobalState): AudibleAssetState =>
   globalState.audibleAssets;
-
-export const selectTextAssetState = (globalState: GlobalState): TextAssetState =>
-  globalState.textAssets;
 
 export const selectCharacterSourceState = (globalState: GlobalState): CharacterSourceState =>
   globalState.characterSources;

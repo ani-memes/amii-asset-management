@@ -2,7 +2,6 @@ import {all, call, put, select, take, takeEvery} from 'redux-saga/effects';
 import {
   selectAudibleAssetState,
   selectMotivationAssetState,
-  selectTextAssetState,
   selectVisualAssetState
 } from "../reducers";
 import {
@@ -27,10 +26,8 @@ import {AssetGroupKeys, VisualMemeAsset} from "../types/AssetTypes";
 import {AudibleAssetDefinition, AudibleAssetState} from "../reducers/AudibleAssetReducer";
 import {createdAudibleAsset, RECEIVED_AUDIBLE_ASSET_LIST} from "../events/AudibleAssetEvents";
 import {v4 as uuid} from 'uuid';
-import {TextAssetState, TextualMotivationAsset} from "../reducers/TextAssetReducer";
 import {flatten, isEmpty, omit, values} from 'lodash';
 import {StringDictionary} from "../types/SupportTypes";
-import {LOADED_ALL_TEXT_ASSETS} from "../events/TextAssetEvents";
 import {push} from "connected-react-router";
 import md5 from "js-md5";
 
@@ -81,18 +78,6 @@ function getAudibleMotivationAssets(audibleAssets: AudibleAssetDefinition[], gro
   return {};
 }
 
-function getTextMotivationAssets(textAssets: StringDictionary<TextualMotivationAsset[]>, groupId: string) {
-  const relevantTextAsset = flatten(values(textAssets))
-    .find(asset => asset.groupId === groupId);
-  if (relevantTextAsset) {
-    return {
-      title: relevantTextAsset.title,
-    }
-  }
-
-  return {};
-}
-
 function* resolveGroupedAudibleAsset(audibleAssetId: string) {
   const {assets: cachedAssets, unsyncedAssets}: AudibleAssetState = yield select(selectAudibleAssetState)
   if (cachedAssets.length) {
@@ -106,19 +91,6 @@ function* resolveGroupedAudibleAsset(audibleAssetId: string) {
 
   const {payload: audibleAssets}: PayloadEvent<AudibleAssetDefinition[]> = yield take(RECEIVED_AUDIBLE_ASSET_LIST);
   return getAudibleMotivationAssets(audibleAssets, audibleAssetId);
-
-}
-
-function* resolveGroupedTextAsset(groupId: string) {
-  const {textAssets: cachedAssets}: TextAssetState = yield select(selectTextAssetState);
-  if (!isEmpty(cachedAssets)) {
-    const titleFromCache = getTextMotivationAssets(cachedAssets, groupId);
-    return titleFromCache; // todo: from unsynced
-  }
-
-  const {payload: allTextAssets}: PayloadEvent<StringDictionary<TextualMotivationAsset[]>> =
-    yield take(LOADED_ALL_TEXT_ASSETS);
-  return getTextMotivationAssets(allTextAssets, groupId);
 
 }
 
