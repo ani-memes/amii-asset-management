@@ -3,7 +3,7 @@ import {Button, Chip, InputLabel, Paper, TextField, Typography} from "@material-
 import {makeStyles} from "@material-ui/core/styles";
 import {Autocomplete} from "@material-ui/lab";
 import ReactAudioPlayer from "react-audio-player";
-import {LocalMotivationAsset, MotivationAsset} from "../reducers/MotivationAssetReducer";
+import {LocalMotivationAsset} from "../reducers/MotivationAssetReducer";
 import {useFormik} from "formik";
 import {MemeAssetCategory} from "../reducers/VisualAssetReducer";
 import {useDispatch, useSelector} from "react-redux";

@@ -9,7 +9,6 @@ import {droppedWaifu} from "../events/VisualAssetEvents";
 import {selectMotivationAssetState} from "../reducers";
 import {LocalMotivationAsset, MotivationAssetState} from "../reducers/MotivationAssetReducer";
 import {makeStyles} from "@material-ui/core/styles";
-import {ImageDimensions} from "../reducers/VisualAssetReducer";
 import {values} from 'lodash';
 import {StringDictionary} from "../types/SupportTypes";
 
@@ -73,20 +72,6 @@ export function getFileType(next: File): string {
   return next.name.substr(next.name.lastIndexOf('.') + 1);
 }
 
-function readImageDimensions(binaryStr: string): Promise<ImageDimensions> {
-  return new Promise<ImageDimensions>((res) => {
-    const img = new Image();
-    img.onload = function () {
-      const height = img.height;
-      const width = img.width;
-      res({
-        width,
-        height
-      })
-    }
-    img.src = binaryStr;
-  });
-}
 
 function getImageHref(next: File, binaryStr: string) {
   return `data:image/${(getFileType(next))};base64,${binaryStr}`;
@@ -102,16 +87,8 @@ const Upload: FC = () => {
       .reduce((accum, next) =>
         accum.then((others) =>
           readFile(next)
-            .then(({binaryStr, result}) =>
-              readImageDimensions(getImageHref(next, binaryStr))
-                .then(imageDimensions => ({
-                  binaryStr,
-                  result,
-                  imageDimensions,
-                })))
             .then(({
-              // todo: revisit this
-                     binaryStr, result, imageDimensions
+                     binaryStr, result
                    }) => {
               const imageChecksum = md5(result);
               return ([

@@ -1,6 +1,9 @@
-import React, {FC, useEffect, useState} from "react";
-import {Auth, Hub} from 'aws-amplify';
-import Login from "./Login";
+import React, {
+  FC,
+  // useEffect, useState
+} from "react";
+// import {Auth, Hub} from 'aws-amplify';
+// import Login from "./Login";
 
 export const withAuthenticator = (Component: FC): FC => {
   const Authenticator = () => {
