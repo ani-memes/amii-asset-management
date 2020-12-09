@@ -1,5 +1,5 @@
 import {LOGGED_OFF} from '../events/SecurityEvents';
-import {AssetDefinition, AudibleMemeAsset, LocalAsset, S3ListObject} from "../types/AssetTypes";
+import {AudibleMemeAsset, LocalAsset} from "../types/AssetTypes";
 import {CREATED_AUDIBLE_ASSET, RECEIVED_AUDIBLE_ASSET_LIST, RECEIVED_WAIFU_LIST} from "../events/AudibleAssetEvents";
 import {StringDictionary, SyncType, UnsyncedAsset} from "../types/SupportTypes";
 
@@ -10,13 +10,11 @@ export interface LocalAudibleAssetDefinition extends AudibleAssetDefinition, Loc
 
 export type AudibleAssetState = {
   assets: AudibleAssetDefinition[];
-  s3List: S3ListObject[];
   unsyncedAssets: StringDictionary<UnsyncedAsset<LocalAudibleAssetDefinition>>
 };
 
 export const INITIAL_AUDIBLE_ASSET_STATE: AudibleAssetState = {
   assets: [],
-  s3List: [],
   unsyncedAssets: {}
 };
 
@@ -26,7 +24,7 @@ const audibleAssetReducer = (state: AudibleAssetState = INITIAL_AUDIBLE_ASSET_ST
     case RECEIVED_WAIFU_LIST:
       return {
         ...state,
-        s3List: action.payload,
+        assets: action.payload,
       };
     case RECEIVED_AUDIBLE_ASSET_LIST:
       return {

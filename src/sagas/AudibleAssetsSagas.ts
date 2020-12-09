@@ -1,11 +1,11 @@
 import {all, call, fork, put, select, takeEvery} from 'redux-saga/effects';
 import {INITIALIZED_APPLICATION, REQUESTED_SYNC_CHANGES, syncedChanges} from "../events/ApplicationLifecycleEvents";
 import {selectAudibleAssetState} from "../reducers";
-import {Storage} from "aws-amplify";
-import {AssetGroupKeys, Assets, S3ListObject} from "../types/AssetTypes";
-import {createReceivedAudibleAssetList, createReceivedAudibleS3List} from "../events/AudibleAssetEvents";
+import {AssetGroupKeys, Assets} from "../types/AssetTypes";
+import {createReceivedAudibleAssetList} from "../events/AudibleAssetEvents";
 import {AudibleAssetDefinition, AudibleAssetState, LocalAudibleAssetDefinition} from "../reducers/AudibleAssetReducer";
 import {
+  apiGet,
   ContentType,
   downloadAsset,
   extractAddedAssets,
@@ -15,43 +15,27 @@ import {
 } from "./CommonSagas";
 import {omit, values} from "lodash";
 
-function* audibleAssetFetchSaga() {
-  const {s3List}: AudibleAssetState = yield select(selectAudibleAssetState)
-  if (s3List.length) return;
-
-  yield fork(assetJsonSaga);
-
-  try {
-    const allVisualAssets: S3ListObject[] = yield call(() =>
-      Storage.list(`${AssetGroupKeys.AUDIBLE}/`)
-        .then((result: S3ListObject[]) => result.filter(ob =>
-          !(ob.key.endsWith("checksum.txt") || ob.key.endsWith(".json"))
-        ))
-    );
-    yield put(createReceivedAudibleS3List(allVisualAssets.map(s3Asset => ({
-      ...s3Asset,
-      eTag: s3Asset.eTag.replaceAll('"', '')
-    }))));
-  } catch (e) {
-    console.warn("Unable to get audible assets", e)
-  }
+function* fetchAudibleAssetList() {
+  const allAudibleAssets: AudibleAssetDefinition[] = yield call(() =>
+    apiGet('/assets/audible')
+  );
+  return allAudibleAssets;
 }
 
-const AUDIBLE_ASSET_LIST_KEY = `${AssetGroupKeys.AUDIBLE}/assets.json`;
 
-function* assetJsonSaga() {
+function* audibleAssetFetchSaga() {
+  const {assets}: AudibleAssetState = yield select(selectAudibleAssetState)
+  if (assets.length) return;
+
   try {
-    const assetJson: AudibleAssetDefinition[] = yield call(() =>
-      Storage.get(AUDIBLE_ASSET_LIST_KEY,
-        {download: true, cacheControl: 'no-cache'})
-        .then((result: any) => result.Body.text())
-        .then(JSON.parse)
-    );
+    const assetJson: AudibleAssetDefinition[] = yield call(fetchAudibleAssetList);
     yield put(createReceivedAudibleAssetList(assetJson));
   } catch (e) {
     console.warn("Unable to get audible asset list", e)
   }
 }
+
+const AUDIBLE_ASSET_LIST_KEY = `${AssetGroupKeys.AUDIBLE}/assets.json`;
 
 const AUDIBLE_ASSET_BLACKLIST = [
   "file"

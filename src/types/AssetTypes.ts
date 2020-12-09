@@ -1,12 +1,5 @@
 import {MemeAssetCategory} from "../reducers/VisualAssetReducer";
 
-export interface S3ListObject {
-  eTag: string;
-  key: string;
-  lastModified: Date;
-  size: number
-}
-
 export enum AssetGroupKeys {
   VISUAL = 'visuals',
   AUDIBLE = 'audible',

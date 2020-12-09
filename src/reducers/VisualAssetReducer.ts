@@ -1,5 +1,5 @@
 import {LOGGED_OFF} from '../events/SecurityEvents';
-import {AssetDefinition, LocalAsset, S3ListObject, VisualMemeAsset} from "../types/AssetTypes";
+import {LocalAsset, VisualMemeAsset} from "../types/AssetTypes";
 import {
   CREATED_VISUAL_ASSET,
   FILTERED_VISUAL_ASSETS,
