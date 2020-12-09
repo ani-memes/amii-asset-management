@@ -8,60 +8,46 @@ import {
 } from "../events/ApplicationLifecycleEvents";
 import {selectMotivationAssetState, selectVisualAssetState} from "../reducers";
 import {Storage} from "aws-amplify";
-import {AssetGroupKeys, Assets, S3ListObject} from "../types/AssetTypes";
+import {AssetGroupKeys, Assets, S3ListObject, VisualMemeAsset} from "../types/AssetTypes";
 import {
   createdVisualAsset,
   createReceivedVisualAssetList,
-  createReceivedVisualS3List,
+  createReceivedVisualMemeList,
   createUpdatedVisualAssetList,
   createUpdatedVisualS3List,
   DROPPED_WAIFU
 } from "../events/VisualAssetEvents";
 import {LocalVisualAssetDefinition, VisualAssetDefinition, VisualAssetState} from "../reducers/VisualAssetReducer";
-import {ContentType, downloadAsset, extractAddedAssets, syncSaga, uploadAssetSaga, uploadAssetsSaga} from "./CommonSagas";
+import {
+  apiGet,
+  ContentType,
+  downloadAsset,
+  extractAddedAssets,
+  syncSaga,
+  uploadAssetSaga,
+  uploadAssetsSaga
+} from "./CommonSagas";
 import {omit, values} from "lodash";
 import {PayloadEvent} from "../events/Event";
 import {LocalMotivationAsset, MotivationAssetState} from "../reducers/MotivationAssetReducer";
 import {cleanedUpMotivationAssets} from "../events/MotivationAssetEvents";
 import {StringDictionary} from "../types/SupportTypes";
 
-function* fetchS3List() {
-  const allVisualAssets: S3ListObject[] = yield call(() =>
-    Storage.list(`${AssetGroupKeys.VISUAL}/`, {cacheControl: 'no-cache'})
-      .then((result: S3ListObject[]) => result.filter(ob =>
-        !(ob.key.endsWith("checksum.txt") || ob.key.endsWith(".json"))
-      ))
+function* fetchVisualAssetList() {
+  const allVisualAssets: VisualMemeAsset[] = yield call(() =>
+    apiGet('/assets/visuals')
   );
-  return allVisualAssets.map(s3Asset => ({
-    ...s3Asset,
-    eTag: s3Asset.eTag.replaceAll('"', '')
-  }));
+  return allVisualAssets;
 }
 
 
 function* visualAssetFetchSaga() {
-  // const res = yield call(()=>
-  //   API.get('amiiassets', '/public/assets/visuals', {})
-  // );
-  // console.log('this is api response', res);
-  try {
-
-    const privateResponse = yield call(() =>
-      API.get('amiiapi', '/assets/visuals', {})
-    );
-    console.log('this is private api response', privateResponse);
-  } catch (e) {
-    console.warn('unable to get visual assets', e)
-  }
-
   const {s3List} = yield select(selectVisualAssetState)
   if (s3List.legth) return;
 
-  yield fork(assetJsonSaga);
-
   try {
-    const visualAssets = yield call(fetchS3List);
-    yield put(createReceivedVisualS3List(visualAssets));
+    const visualAssets = yield call(fetchVisualAssetList);
+    yield put(createReceivedVisualMemeList(visualAssets));
   } catch (e) {
     console.warn("Unable to get visual asset s3 list", e)
   }
@@ -69,20 +55,6 @@ function* visualAssetFetchSaga() {
 
 // todo: consolidate string literals
 const VISUAL_ASSET_LIST_KEY = `${AssetGroupKeys.VISUAL}/assets.json`;
-
-function* assetJsonSaga() {
-  try {
-    const assetJson: VisualAssetDefinition[] = yield call(() =>
-      Storage.get(VISUAL_ASSET_LIST_KEY,
-        {download: true, cacheControl: 'no-cache'})
-        .then((result: any) => result.Body.text())
-        .then(JSON.parse)
-    );
-    yield put(createReceivedVisualAssetList(assetJson));
-  } catch (e) {
-    console.warn("Unable to get visual asset list", e)
-  }
-}
 
 const VISUAL_ASSET_BLACKLIST = [
   "file"
@@ -146,7 +118,7 @@ function* localAssetCleanupSaga({payload: syncedAsset}: PayloadEvent<Assets>) {
       values(assets)
         .filter(asset => !asset.imageChecksum)
     ));
-    const newAssetList = yield call(fetchS3List);
+    const newAssetList = yield call(fetchVisualAssetList);
     yield put(createUpdatedVisualS3List(newAssetList))
   }
 }

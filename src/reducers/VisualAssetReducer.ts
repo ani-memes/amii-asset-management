@@ -1,31 +1,31 @@
 import {LOGGED_OFF} from '../events/SecurityEvents';
-import {AssetDefinition, LocalAsset, S3ListObject} from "../types/AssetTypes";
+import {AssetDefinition, LocalAsset, S3ListObject, VisualMemeAsset} from "../types/AssetTypes";
 import {
   CREATED_VISUAL_ASSET,
   FILTERED_VISUAL_ASSETS,
   RECEIVED_VISUAL_ASSET_LIST,
-  RECEIVED_VISUAL_S3_LIST,
+  RECEIVED_VISUAL_MEME_LIST,
   UPDATED_VISUAL_ASSET_LIST,
   UPDATED_VISUAL_S3_LIST
 } from "../events/VisualAssetEvents";
 import {HasId, StringDictionary, SyncType, UnsyncedAsset} from "../types/SupportTypes";
 
-export enum WaifuAssetCategory {
-  ACKNOWLEDGEMENT = 'ACKNOWLEDGEMENT',
-  FRUSTRATION = 'FRUSTRATION',
-  ENRAGED = 'ENRAGED',
-  CELEBRATION = 'CELEBRATION',
-  HAPPY = 'HAPPY',
-  SMUG = 'SMUG',
-  WAITING = 'WAITING',
-  MOTIVATION = 'MOTIVATION',
-  WELCOMING = 'WELCOMING',
-  DEPARTURE = 'DEPARTURE',
-  ENCOURAGEMENT = 'ENCOURAGEMENT',
-  TSUNDERE = 'TSUNDERE',
-  MOCKING = 'MOCKING',
-  SHOCKED = 'SHOCKED',
-  DISAPPOINTMENT = 'DISAPPOINTMENT' // you don't want to disappoint your waifu now do you?
+export enum MemeAssetCategory {
+  ACKNOWLEDGEMENT = 0,
+  FRUSTRATION = 1,
+  ENRAGED = 2,
+  CELEBRATION = 3,
+  HAPPY = 4,
+  SMUG = 5,
+  WAITING = 6,
+  MOTIVATION = 7,
+  WELCOMING = 8,
+  DEPARTURE = 9,
+  ENCOURAGEMENT = 10,
+  TSUNDERE = 11,
+  MOCKING = 12,
+  SHOCKED = 13,
+  DISAPPOINTMENT = 14 // you don't want to disappoint your waifu now do you?
 }
 
 export interface ImageDimensions {
@@ -55,8 +55,8 @@ export interface LocalVisualAssetDefinition extends VisualAssetDefinition, Local
 
 export type VisualAssetState = {
   assets: VisualAssetDefinition[];
-  s3List: S3ListObject[];
-  displayS3List: S3ListObject[];
+  s3List: VisualMemeAsset[];
+  displayS3List: VisualMemeAsset[];
   unsyncedAssets: StringDictionary<UnsyncedAsset<LocalVisualAssetDefinition>>
 };
 
@@ -71,7 +71,7 @@ export const INITIAL_VISUAL_ASSET_STATE: VisualAssetState = {
 // eslint-disable-next-line
 const visualAssetReducer = (state: VisualAssetState = INITIAL_VISUAL_ASSET_STATE, action: any) => {
   switch (action.type) {
-    case RECEIVED_VISUAL_S3_LIST:
+    case RECEIVED_VISUAL_MEME_LIST:
       return {
         ...state,
         s3List: action.payload,

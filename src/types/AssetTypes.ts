@@ -1,4 +1,4 @@
-import {WaifuAssetCategory} from "../reducers/VisualAssetReducer";
+import {MemeAssetCategory} from "../reducers/VisualAssetReducer";
 
 export interface S3ListObject {
   eTag: string;
@@ -26,9 +26,36 @@ export enum Assets {
 export interface AssetDefinition {
   path: string;
   groupId?: string;
-  categories: WaifuAssetCategory[];
+  categories: MemeAssetCategory[];
 }
 
 export interface LocalAsset {
   file?: File;
+}
+
+export interface VisualMemeAsset {
+  id: string; // MD5 checksum
+  path: string;
+  alt: string;
+  cat: MemeAssetCategory[]; // assetCategories
+  char: string[]; // characters appearing asset
+  aud?: string; // ID of audible asset
+}
+
+export interface AudibleMemeAsset {
+  id: string; // MD5 checksum
+  path: string;
+}
+
+export interface AnimeAsset {
+  id: string; // UUID
+  name: string;
+  season: string;
+}
+
+export interface CharacterAsset {
+  id: string; // UUID
+  animeId: string; // UUID
+  name: string;
+  gender: string;
 }

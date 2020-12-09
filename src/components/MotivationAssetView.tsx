@@ -5,7 +5,7 @@ import {Autocomplete} from "@material-ui/lab";
 import ReactAudioPlayer from "react-audio-player";
 import {MotivationAsset} from "../reducers/MotivationAssetReducer";
 import {useFormik} from "formik";
-import {WaifuAssetCategory} from "../reducers/VisualAssetReducer";
+import {MemeAssetCategory} from "../reducers/VisualAssetReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {isEmpty, values as getValues} from 'lodash';
 import {useHistory} from 'react-router-dom';
@@ -38,21 +38,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const waifuAssetCategories = [
-  {title: 'Acknowledgement', value: WaifuAssetCategory.ACKNOWLEDGEMENT},
-  {title: 'Frustration', value: WaifuAssetCategory.FRUSTRATION},
-  {title: 'Enraged', value: WaifuAssetCategory.ENRAGED},
-  {title: 'Celebration', value: WaifuAssetCategory.CELEBRATION},
-  {title: 'Happy', value: WaifuAssetCategory.HAPPY},
-  {title: 'Smug', value: WaifuAssetCategory.SMUG},
-  {title: 'Waiting', value: WaifuAssetCategory.WAITING},
-  {title: 'Motivation', value: WaifuAssetCategory.MOTIVATION},
-  {title: 'Welcoming', value: WaifuAssetCategory.WELCOMING},
-  {title: 'Departure', value: WaifuAssetCategory.DEPARTURE},
-  {title: 'Encouragement', value: WaifuAssetCategory.ENCOURAGEMENT},
-  {title: 'Tsundere', value: WaifuAssetCategory.TSUNDERE},
-  {title: 'Mocking', value: WaifuAssetCategory.MOCKING},
-  {title: 'Shocked', value: WaifuAssetCategory.SHOCKED},
-  {title: 'Disappointment', value: WaifuAssetCategory.DISAPPOINTMENT},
+  {title: 'Acknowledgement', value: MemeAssetCategory.ACKNOWLEDGEMENT},
+  {title: 'Frustration', value: MemeAssetCategory.FRUSTRATION},
+  {title: 'Enraged', value: MemeAssetCategory.ENRAGED},
+  {title: 'Celebration', value: MemeAssetCategory.CELEBRATION},
+  {title: 'Happy', value: MemeAssetCategory.HAPPY},
+  {title: 'Smug', value: MemeAssetCategory.SMUG},
+  {title: 'Waiting', value: MemeAssetCategory.WAITING},
+  {title: 'Motivation', value: MemeAssetCategory.MOTIVATION},
+  {title: 'Welcoming', value: MemeAssetCategory.WELCOMING},
+  {title: 'Departure', value: MemeAssetCategory.DEPARTURE},
+  {title: 'Encouragement', value: MemeAssetCategory.ENCOURAGEMENT},
+  {title: 'Tsundere', value: MemeAssetCategory.TSUNDERE},
+  {title: 'Mocking', value: MemeAssetCategory.MOCKING},
+  {title: 'Shocked', value: MemeAssetCategory.SHOCKED},
+  {title: 'Disappointment', value: MemeAssetCategory.DISAPPOINTMENT},
 ]
 
 interface Props {

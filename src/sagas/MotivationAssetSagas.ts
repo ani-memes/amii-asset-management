@@ -9,7 +9,6 @@ import {
   createdVisualAsset,
   createFilteredVisualS3List,
   RECEIVED_VISUAL_ASSET_LIST,
-  RECEIVED_VISUAL_S3_LIST,
   UPDATED_VISUAL_S3_LIST
 } from "../events/VisualAssetEvents";
 import {VisualAssetDefinition, VisualAssetState} from "../reducers/VisualAssetReducer";
@@ -24,7 +23,7 @@ import {
 import {PayloadEvent} from "../events/Event";
 import {LocalMotivationAsset, MotivationAsset, MotivationAssetState} from "../reducers/MotivationAssetReducer";
 import {buildS3ObjectLink} from "../util/AWSTools";
-import {AssetGroupKeys, S3ListObject} from "../types/AssetTypes";
+import {AssetGroupKeys, S3ListObject, VisualMemeAsset} from "../types/AssetTypes";
 import {AudibleAssetDefinition, AudibleAssetState} from "../reducers/AudibleAssetReducer";
 import {createdAudibleAsset, RECEIVED_AUDIBLE_ASSET_LIST} from "../events/AudibleAssetEvents";
 import {v4 as uuid} from 'uuid';
@@ -34,23 +33,8 @@ import {StringDictionary} from "../types/SupportTypes";
 import {LOADED_ALL_TEXT_ASSETS} from "../events/TextAssetEvents";
 import {push} from "connected-react-router";
 
-function getKey(freshS3List: S3ListObject[], s3Etag: string) {
-  return freshS3List.find(obj => obj.eTag === s3Etag)?.key;
-}
-
-function* fetchAssetKey(s3Etag: string) {
-  const {s3List}: VisualAssetState = yield select(selectVisualAssetState);
-  if (!s3List.length) {
-    const {payload: freshS3List}: PayloadEvent<S3ListObject[]> =
-      yield take(RECEIVED_VISUAL_S3_LIST);
-    return getKey(freshS3List, s3Etag);
-  }
-
-  return getKey(s3List, s3Etag);
-}
-
-function* motivationAssetViewSaga({payload: s3Etag}: PayloadEvent<string>) {
-  const motivationAsset = yield call(fetchAssetForEtag, s3Etag);
+function* motivationAssetViewSaga({payload: assetId}: PayloadEvent<string>) {
+  const motivationAsset = yield call(fetchAssetForEtag, assetId);
   yield put(createCurrentMotivationAssetEvent(motivationAsset));
 }
 
@@ -59,8 +43,8 @@ function* localMotivationAssetViewSaga({payload: checkSum}: PayloadEvent<string>
   yield put(createCurrentMotivationAssetEvent(motivationAsset));
 }
 
-function* fetchAssetForEtag(s3Etag: string) {
-  const assetKey = yield call(fetchAssetKey, s3Etag);
+function* fetchAssetForEtag(assetId: string) {
+  const assetKey = assetId;
   const {assets}: MotivationAssetState = yield select(selectMotivationAssetState)
   const cachedAsset = assets[assetKey];
   if (cachedAsset)
@@ -206,7 +190,7 @@ const SEARCH_KEYS = [
 ]
 
 function containsKeyword(
-  asset: VisualAssetDefinition,
+  asset: VisualMemeAsset,
   searchKeyword: string
 ): boolean {
   // @ts-ignore
@@ -222,28 +206,26 @@ function getS3Object(
   return s3List.find(s3Object => getTrimmedKey(s3Object.key) === asset.path);
 }
 
-function* filterAssets(keyword: string, s3List: S3ListObject[], assets: VisualAssetDefinition[]) {
+function* filterAssets(keyword: string, s3List: VisualMemeAsset[]) {
   if (!keyword) {
     yield put(createFilteredVisualS3List(s3List))
   } else {
     const searchKeyword = keyword.toLowerCase();
     yield put(createFilteredVisualS3List(
-      assets.filter(asset => containsKeyword(asset, searchKeyword))
-        .map(asset => getS3Object(asset, s3List))
-        .filter(Boolean) as S3ListObject[]
+      s3List.filter(asset => containsKeyword(asset, searchKeyword))
+        .filter(Boolean) as VisualMemeAsset[]
     ))
   }
 }
 
-function* updateSearch({payload: s3List}: PayloadEvent<S3ListObject[]>) {
+function* updateSearch({payload: s3List}: PayloadEvent<VisualMemeAsset[]>) {
   const {searchTerm}: MotivationAssetState = yield select(selectMotivationAssetState);
-  const {assets}: VisualAssetState = yield select(selectVisualAssetState);
-  yield call(filterAssets, searchTerm || '', s3List, assets);
+  yield call(filterAssets, searchTerm || '', s3List);
 }
 
 function* motivationAssetSearchSaga({payload: keyword}: PayloadEvent<string>) {
-  const {s3List, assets}: VisualAssetState = yield select(selectVisualAssetState);
-  yield call(filterAssets, keyword, s3List, assets);
+  const {s3List}: VisualAssetState = yield select(selectVisualAssetState);
+  yield call(filterAssets, keyword, s3List);
   yield put(push("/"));
 }
 

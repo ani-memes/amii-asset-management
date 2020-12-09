@@ -66,10 +66,10 @@ const Dashboard: FC = () => {
         <Grid container spacing={3}>
 
           {
-            viewedS3Items.map(s3Item => (
-              <Grid item key={s3Item.key} xs={6}>
-                <Link style={{textDecoration: 'none', color: 'inherit'}} to={`/assets/view/${s3Item.eTag}`}>
-                  <WaifuDisplay href={buildS3ObjectLink(s3Item.key)}/>
+            viewedS3Items.map(visualMemeAsset => (
+              <Grid item key={visualMemeAsset.id} xs={6}>
+                <Link style={{textDecoration: 'none', color: 'inherit'}} to={`/assets/view/${visualMemeAsset.id}`}>
+                  <WaifuDisplay href={buildS3ObjectLink(visualMemeAsset.path)}/>
                 </Link>
               </Grid>
             ))

@@ -149,7 +149,7 @@ const Header: FC<Props> = ({
           />
         </div>
         {
-          profile && (
+          profile && profile.attributes && (
             <>
               <IconButton color="inherit" onClick={handleClick} style={{marginLeft: '1rem'}}>
                 <Avatar src={profile.attributes.picture}/>

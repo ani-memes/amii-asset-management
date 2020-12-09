@@ -1,12 +1,12 @@
 import {LOGGED_OFF} from '../events/SecurityEvents';
 import {S3ListObject} from "../types/AssetTypes";
 import {LOADED_ALL_TEXT_ASSETS, RECEIVED_TEXT_ASSET_LIST, RECEIVED_TEXT_S3_LIST} from "../events/TextAssetEvents";
-import {WaifuAssetCategory} from "./VisualAssetReducer";
+import {MemeAssetCategory} from "./VisualAssetReducer";
 import {StringDictionary} from "../types/SupportTypes";
 
 export type TextAssetDefinition = {
   path: string;
-  categories: WaifuAssetCategory;
+  categories: MemeAssetCategory;
   groupId?: string;
 }
 

@@ -8,6 +8,7 @@ import {values} from "lodash";
 import {readFile} from "../components/Upload";
 import md5 from "js-md5";
 import {completedSyncAttempt, startedSyncAttempt} from "../events/ApplicationLifecycleEvents";
+import axios from "axios";
 
 export function downloadAsset<T>(key: string, noCache = false): Promise<T> {
   return Storage.get(key, {
@@ -104,3 +105,8 @@ export function* uploadAssetsSaga<T extends (AssetDefinition & LocalAsset)>(
       )
   );
 }
+
+
+export const apiGet = <T>(path: string): Promise<T> =>
+  axios.get(`http://localhost:4000${path}`)
+    .then(res => res.data)
