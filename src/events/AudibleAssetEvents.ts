@@ -1,7 +1,6 @@
 import {PayloadEvent} from './Event';
 import {AudibleAssetDefinition, LocalAudibleAssetDefinition} from "../reducers/AudibleAssetReducer";
 
-export const RECEIVED_WAIFU_LIST = 'RECEIVED_AUDIBLE_S3_LIST';
 export const RECEIVED_AUDIBLE_ASSET_LIST = 'RECEIVED_AUDIBLE_ASSET_LIST';
 export const CREATED_AUDIBLE_ASSET = 'CREATED_AUDIBLE_ASSET';
 

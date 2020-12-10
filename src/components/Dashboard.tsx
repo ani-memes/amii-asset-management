@@ -6,7 +6,7 @@ import {selectVisualAssetState} from "../reducers";
 import InfiniteScroll from "./util/InfiniteScroll";
 import {Link} from 'react-router-dom';
 import {buildS3ObjectLink} from "../util/AWSTools";
-import WaifuDisplay from "./WaifuDisplay";
+import MemeDisplay from "./MemeDisplay";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -36,20 +36,20 @@ function Copyright() {
   );
 }
 
-const waifuPerPage = 10;
+const memesPerPage = 10;
 
 const Dashboard: FC = () => {
   const classes = useStyles();
 
   const {displayAssetList} = useSelector(selectVisualAssetState);
-  const [assetIndex, setAssetIndex] = useState(waifuPerPage);
+  const [assetIndex, setAssetIndex] = useState(memesPerPage);
 
   const viewedVisualAssets = displayAssetList.slice(0, assetIndex)
   const hasMore = displayAssetList.length > viewedVisualAssets.length;
   const fetchData = () => {
     if (hasMore) {
       setAssetIndex(prevState => {
-        const nextIndex = prevState + waifuPerPage;
+        const nextIndex = prevState + memesPerPage;
         return nextIndex > displayAssetList.length ? displayAssetList.length : nextIndex;
       })
     }
@@ -69,7 +69,7 @@ const Dashboard: FC = () => {
             viewedVisualAssets.map(visualMemeAsset => (
               <Grid item key={visualMemeAsset.id} xs={6}>
                 <Link style={{textDecoration: 'none', color: 'inherit'}} to={`/assets/view/${visualMemeAsset.id}`}>
-                  <WaifuDisplay href={buildS3ObjectLink(
+                  <MemeDisplay href={buildS3ObjectLink(
                     // todo: consolidate
                     `visuals/${visualMemeAsset.path}`
                   )}/>

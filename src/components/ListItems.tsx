@@ -4,14 +4,13 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import {Assignment, CloudUpload, GifTwoTone, RecordVoiceOver} from "@material-ui/icons";
+import {Assignment, CloudUpload} from "@material-ui/icons";
 import {SvgIconTypeMap} from "@material-ui/core";
 import {OverridableComponent} from "@material-ui/core/OverridableComponent";
 import Dashboard from "./Dashboard";
 import {Link} from 'react-router-dom';
 import Upload from "./Upload";
 import CharacterSources from "./CharacterSources";
-import Todo from "./Todo";
 
 interface RouteDefinition {
   route: string;

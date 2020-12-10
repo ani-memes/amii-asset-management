@@ -1,6 +1,6 @@
 import {LOGGED_OFF} from '../events/SecurityEvents';
 import {AudibleMemeAsset, LocalAsset} from "../types/AssetTypes";
-import {CREATED_AUDIBLE_ASSET, RECEIVED_AUDIBLE_ASSET_LIST, RECEIVED_WAIFU_LIST} from "../events/AudibleAssetEvents";
+import {CREATED_AUDIBLE_ASSET, RECEIVED_AUDIBLE_ASSET_LIST} from "../events/AudibleAssetEvents";
 import {StringDictionary, SyncType, UnsyncedAsset} from "../types/SupportTypes";
 
 export type AudibleAssetDefinition = AudibleMemeAsset
@@ -21,11 +21,6 @@ export const INITIAL_AUDIBLE_ASSET_STATE: AudibleAssetState = {
 // eslint-disable-next-line
 const audibleAssetReducer = (state: AudibleAssetState = INITIAL_AUDIBLE_ASSET_STATE, action: any) => {
   switch (action.type) {
-    case RECEIVED_WAIFU_LIST:
-      return {
-        ...state,
-        assets: action.payload,
-      };
     case RECEIVED_AUDIBLE_ASSET_LIST:
       return {
         ...state,

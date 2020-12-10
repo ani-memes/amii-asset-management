@@ -1,11 +1,10 @@
 import {all, call, fork, put, select, takeEvery} from 'redux-saga/effects';
 import {INITIALIZED_APPLICATION, REQUESTED_SYNC_CHANGES, syncedChanges} from "../events/ApplicationLifecycleEvents";
 import {selectCharacterSourceState} from "../reducers";
-import {Anime, Waifu} from "../reducers/VisualAssetReducer";
 import {createReceivedAnimeList, createReceivedCharacterList} from "../events/CharacterSourceEvents";
 import {CharacterSourceState} from "../reducers/CharacterSourceReducer";
 import {isEmpty} from "lodash";
-import {Assets, CharacterAsset} from "../types/AssetTypes";
+import {AnimeAsset, Assets, CharacterAsset} from "../types/AssetTypes";
 import {apiGet, apiPost, extractAddedAssets, syncSaga} from "./CommonSagas";
 
 function* characterSourceAssetFetchSaga() {
@@ -17,7 +16,7 @@ function* characterSourceAssetFetchSaga() {
 }
 
 function* loadCharacterDefinitions() {
-  const characterList: Waifu[] | undefined = yield call(getCharacterDefinitions);
+  const characterList: CharacterAsset[] | undefined = yield call(getCharacterDefinitions);
   if (characterList) {
     yield put(createReceivedCharacterList(characterList));
   }
@@ -36,7 +35,7 @@ function* getCharacterDefinitions() {
 }
 
 function* loadAnimeDefinitions() {
-  const myAnimeList: Anime[] | undefined = yield call(getAnimeDefinitions);
+  const myAnimeList: AnimeAsset[] | undefined = yield call(getAnimeDefinitions);
   if (myAnimeList) {
     yield put(createReceivedAnimeList(myAnimeList));
   }
@@ -44,7 +43,7 @@ function* loadAnimeDefinitions() {
 
 function* getAnimeDefinitions() {
   try {
-    const myAnimeList: Anime[] = yield call(() =>
+    const myAnimeList: AnimeAsset[] = yield call(() =>
       apiGet('/assets/anime')
     );
     return myAnimeList;
@@ -59,7 +58,7 @@ function* attemptCharacterSync() {
     const {unSyncedCharacters}: CharacterSourceState = yield select(selectCharacterSourceState);
     const addedCharacters = extractAddedAssets(unSyncedCharacters);
     yield call(apiPost, '/assets/characters', addedCharacters);
-    yield put(syncedChanges(Assets.WAIFU));
+    yield put(syncedChanges(Assets.CHARACTERS));
   } catch (e) {
     console.warn("unable to sync characters for raisins", e)
   }
@@ -77,7 +76,7 @@ function* attemptAnimeSync() {
 }
 
 function* characterSourceSyncSaga() {
-  yield fork(syncSaga, Assets.WAIFU, attemptCharacterSync);
+  yield fork(syncSaga, Assets.CHARACTERS, attemptCharacterSync);
   yield fork(syncSaga, Assets.ANIME, attemptAnimeSync);
 }
 

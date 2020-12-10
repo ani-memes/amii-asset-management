@@ -1,24 +1,23 @@
 import {LOGGED_OFF} from '../events/SecurityEvents';
 import {
   CREATED_ANIME,
-  CREATED_WAIFU,
+  CREATED_CHARACTER,
   RECEIVED_ANIME_LIST,
-  RECEIVED_WAIFU_LIST,
+  RECEIVED_CHARACTER_LIST,
   UPDATED_ANIME,
-  UPDATED_WAIFU
+  UPDATED_CHARACTER
 } from "../events/CharacterSourceEvents";
-import {Anime} from "./VisualAssetReducer";
 import {StringDictionary, SyncType, UnsyncedAsset} from "../types/SupportTypes";
 import {dictionaryReducer} from "../util/FunctionalTools";
 import {SYNCED_ASSET} from "../events/ApplicationLifecycleEvents";
-import {Assets, CharacterAsset} from "../types/AssetTypes";
+import {AnimeAsset, Assets, CharacterAsset} from "../types/AssetTypes";
 
 
 export interface CharacterSourceState {
-  anime: StringDictionary<Anime>;
+  anime: StringDictionary<AnimeAsset>;
   characters: StringDictionary<CharacterAsset>;
   unSyncedCharacters: StringDictionary<UnsyncedAsset<CharacterAsset>>;
-  unSyncedAnime: StringDictionary<UnsyncedAsset<Anime>>;
+  unSyncedAnime: StringDictionary<UnsyncedAsset<AnimeAsset>>;
 }
 
 export const INITIAL_SOURCE_STATE: CharacterSourceState = {
@@ -31,7 +30,7 @@ export const INITIAL_SOURCE_STATE: CharacterSourceState = {
 // eslint-disable-next-line
 const characterSourceReducer = (state: CharacterSourceState = INITIAL_SOURCE_STATE, action: any) => {
   switch (action.type) {
-    case RECEIVED_WAIFU_LIST:
+    case RECEIVED_CHARACTER_LIST:
       return {
         ...state,
         characters: action.payload.reduce(dictionaryReducer, {}),
@@ -54,12 +53,12 @@ const characterSourceReducer = (state: CharacterSourceState = INITIAL_SOURCE_STA
           [action.payload.id]: {
             syncType: SyncType.CREATE,
             asset: action.payload,
-          } as UnsyncedAsset<Anime>
+          } as UnsyncedAsset<AnimeAsset>
         },
       };
 
-    case CREATED_WAIFU:
-    case UPDATED_WAIFU:
+    case CREATED_CHARACTER:
+    case UPDATED_CHARACTER:
       return {
         ...state,
         characters: {
@@ -77,7 +76,7 @@ const characterSourceReducer = (state: CharacterSourceState = INITIAL_SOURCE_STA
 
     case SYNCED_ASSET : {
       switch (action.payload) {
-        case Assets.WAIFU: {
+        case Assets.CHARACTERS: {
           return {
             ...state,
             unSyncedCharacters: {},

@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const WaifuDisplay: FC<Props> = ({
+const MemeDisplay: FC<Props> = ({
                                    href
                                  }) => {
   const classes = useStyles();
@@ -34,4 +34,4 @@ const WaifuDisplay: FC<Props> = ({
   );
 };
 
-export default WaifuDisplay;
+export default MemeDisplay;

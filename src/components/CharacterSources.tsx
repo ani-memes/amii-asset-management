@@ -11,8 +11,7 @@ import {selectCharacterSourceState} from "../reducers";
 import {groupBy, values} from 'lodash';
 import {useFormik} from "formik";
 import {createdAnime, createdCharacter, updatedAnime, updatedCharacter} from "../events/CharacterSourceEvents";
-import {Anime} from "../reducers/VisualAssetReducer";
-import {CharacterAsset, Gender} from "../types/AssetTypes";
+import {AnimeAsset, CharacterAsset, Gender} from "../types/AssetTypes";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -122,7 +121,7 @@ const CharacterSources: FC = () => {
     [characters]);
 
   const dispatch = useDispatch();
-  const createCharacter = (anime: Anime) => (newBestGirl: string) => {
+  const createCharacter = (anime: AnimeAsset) => (newBestGirl: string) => {
     dispatch(createdCharacter({
       id: new Date().valueOf().toString(32),
       name: newBestGirl,
@@ -131,14 +130,14 @@ const CharacterSources: FC = () => {
     }));
   };
 
-  const updateCharacter = (waifuToUpdate: CharacterAsset) => (newCharacterName: string) => {
+  const updateCharacter = (characterToUpdate: CharacterAsset) => (newCharacterName: string) => {
     dispatch(updatedCharacter({
-      ...waifuToUpdate,
+      ...characterToUpdate,
       name: newCharacterName,
     }));
   };
 
-  const updateAnime = (animeToUpdate: Anime) => (newAnimeName: string) => {
+  const updateAnime = (animeToUpdate: AnimeAsset) => (newAnimeName: string) => {
     dispatch(updatedAnime({
       ...animeToUpdate,
       name: newAnimeName,

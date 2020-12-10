@@ -1,5 +1,5 @@
 import {LOGGED_OFF} from '../events/SecurityEvents';
-import {AnimeAsset, CharacterAsset, LocalAsset, VisualMemeAsset} from "../types/AssetTypes";
+import {LocalAsset, VisualMemeAsset} from "../types/AssetTypes";
 import {
   CREATED_VISUAL_ASSET,
   FILTERED_VISUAL_ASSETS,
@@ -26,11 +26,6 @@ export enum MemeAssetCategory {
   SHOCKED = 13,
   DISAPPOINTMENT = 14 // you don't want to disappoint your characters now do you?
 }
-
-export  type Anime = AnimeAsset;
-
-export type Waifu = CharacterAsset;
-
 
 export interface LocalVisualAssetDefinition extends VisualMemeAsset, LocalAsset {
   imageChecksum?: string;

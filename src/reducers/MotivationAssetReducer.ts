@@ -1,5 +1,5 @@
 import {LOGGED_OFF} from '../events/SecurityEvents';
-import {CREATED_VISUAL_ASSET, DROPPED_WAIFU} from "../events/VisualAssetEvents";
+import {CREATED_VISUAL_ASSET, DROPPED_MEME} from "../events/VisualAssetEvents";
 import {StringDictionary} from "../types/SupportTypes";
 import {AudibleAssetDefinition} from "./AudibleAssetReducer";
 import {
@@ -11,7 +11,7 @@ import {
 } from "../events/MotivationAssetEvents";
 import {omit, values} from 'lodash';
 import {AssetGroupKeys, Assets, VisualMemeAsset} from "../types/AssetTypes";
-import {CREATED_ANIME, CREATED_WAIFU, UPDATED_ANIME, UPDATED_WAIFU} from "../events/CharacterSourceEvents";
+import {CREATED_ANIME, CREATED_CHARACTER, UPDATED_ANIME, UPDATED_CHARACTER} from "../events/CharacterSourceEvents";
 import {COMPLETED_SYNC_ATTEMPT, STARTED_SYNC_ATTEMPT, SYNCED_ASSET} from "../events/ApplicationLifecycleEvents";
 import {CREATED_AUDIBLE_ASSET} from "../events/AudibleAssetEvents";
 
@@ -90,7 +90,7 @@ const motivationAssetReducer = (
   action: any
 ): MotivationAssetState => {
   switch (action.type) {
-    case DROPPED_WAIFU: {
+    case DROPPED_MEME: {
       const motivationAssets: LocalMotivationAsset[] = action.payload;
       return {
         ...state,
@@ -140,9 +140,9 @@ const motivationAssetReducer = (
     case CREATED_ANIME:
       return addToSync(state, Assets.ANIME);
 
-    case UPDATED_WAIFU:
-    case CREATED_WAIFU:
-      return addToSync(state, Assets.WAIFU);
+    case UPDATED_CHARACTER:
+    case CREATED_CHARACTER:
+      return addToSync(state, Assets.CHARACTERS);
 
     case CREATED_AUDIBLE_ASSET:
       return addToSync(state, Assets.AUDIBLE);

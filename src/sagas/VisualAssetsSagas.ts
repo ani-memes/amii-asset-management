@@ -11,7 +11,7 @@ import {
   createdVisualAsset,
   createReceivedVisualMemeList,
   createUpdatedVisualAssetList,
-  DROPPED_WAIFU
+  DROPPED_MEME
 } from "../events/VisualAssetEvents";
 import {LocalVisualAssetDefinition, VisualAssetState} from "../reducers/VisualAssetReducer";
 import {apiGet, apiPost, extractAddedAssets, syncSaga, uploadAssetsSaga} from "./CommonSagas";
@@ -106,7 +106,7 @@ function* visualAssetSyncSaga() {
 
 function* visualAssetSagas() {
   yield takeEvery(INITIALIZED_APPLICATION, visualAssetFetchSaga);
-  yield takeEvery(DROPPED_WAIFU, visualAssetExtractionSaga);
+  yield takeEvery(DROPPED_MEME, visualAssetExtractionSaga);
   yield takeEvery(REQUESTED_SYNC_CHANGES, visualAssetSyncSaga);
   yield takeEvery(SYNCED_ASSET, localAssetCleanupSaga);
 }

@@ -19,10 +19,10 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
-  waifuContainer: {
+  memeContainer: {
     padding: theme.spacing(4),
   },
-  waifuAssetDetails: {
+  memeAssetDetails: {
     padding: theme.spacing(2),
     display: 'flex',
     flexDirection: 'row',
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const waifuAssetCategories = [
+const memeAssetCategories = [
   {title: 'Acknowledgement', value: MemeAssetCategory.ACKNOWLEDGEMENT},
   {title: 'Frustration', value: MemeAssetCategory.FRUSTRATION},
   {title: 'Enraged', value: MemeAssetCategory.ENRAGED},
@@ -120,12 +120,12 @@ const MotivationAssetView: FC<Props> = ({
 
   return <div style={{display: 'flex', flexDirection: "column", flexGrow: 1}}>
     <div style={{display: 'flex', margin: '0 auto', flexDirection: 'row', flexWrap: 'wrap', width: '100%'}}>
-      <div className={classes.waifuContainer}>
+      <div className={classes.memeContainer}>
         <Paper className={classes.paper}>
           <img src={motivationAsset.imageHref} alt={motivationAsset.visuals.alt}/>
         </Paper>
       </div>
-      <div className={classes.waifuAssetDetails}>
+      <div className={classes.memeAssetDetails}>
         <div style={{maxWidth: 500, marginRight: '2rem', minWidth: 300}}>
           <Typography variant={'h5'} paragraph>
             Asset Details
@@ -153,11 +153,11 @@ const MotivationAssetView: FC<Props> = ({
                 <Autocomplete
                   multiple
                   id="categories"
-                  options={waifuAssetCategories}
+                  options={memeAssetCategories}
                   getOptionLabel={(option) => option.title}
-                  defaultValue={(values.categories || []).map(cat => waifuAssetCategories.find(
-                    waifuCat => waifuCat.value === cat
-                  ) || waifuAssetCategories[0])}
+                  defaultValue={(values.categories || []).map(cat => memeAssetCategories.find(
+                    memeCat => memeCat.value === cat
+                  ) || memeAssetCategories[0])}
                   style={{marginTop: '1rem'}}
                   filterSelectedOptions
                   onChange={(event, newValue) => {
@@ -193,7 +193,7 @@ const MotivationAssetView: FC<Props> = ({
                   options={listOfCharacters}
                   getOptionLabel={(option) => option.title}
                   defaultValue={(values.characterIds || []).map(cat => listOfCharacters.find(
-                    waifuCat => waifuCat.value === cat
+                    memeCat => memeCat.value === cat
                   ) || listOfCharacters[0])}
                   style={{marginTop: '1rem'}}
                   filterSelectedOptions
@@ -216,7 +216,7 @@ const MotivationAssetView: FC<Props> = ({
                       {...params}
                       variant="outlined"
                       label="Character(s)"
-                      placeholder="Waifu"
+                      placeholder="Character"
                     />
                   )}
                 />
@@ -226,18 +226,8 @@ const MotivationAssetView: FC<Props> = ({
         </div>
         <div style={{maxWidth: 500}}>
           <Typography variant={'h5'} paragraph>
-            Related Assets
+            Related Asset
           </Typography>
-          {/*<div>*/}
-          {/*  <TextField name='title'*/}
-          {/*             label="Notification Title"*/}
-          {/*             placeholder={'You\'re the best!'}*/}
-          {/*             variant={"outlined"}*/}
-          {/*             value={values.title}*/}
-          {/*             onChange={handleChange}*/}
-          {/*             style={{width: '100%'}}*/}
-          {/*  />*/}
-          {/*</div>*/}
           <div style={{marginTop: '1rem'}}>
             <InputLabel style={{marginBottom: '0.5rem'}}>Audio</InputLabel>
             {

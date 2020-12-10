@@ -2,10 +2,10 @@ import React, {FC, useCallback, useMemo} from 'react';
 import {useDropzone} from 'react-dropzone'
 import {Container, Grid} from "@material-ui/core";
 import {Link} from "react-router-dom";
-import WaifuDisplay from "./WaifuDisplay";
+import MemeDisplay from "./MemeDisplay";
 import md5 from 'js-md5';
 import {useDispatch, useSelector} from "react-redux";
-import {droppedWaifu} from "../events/VisualAssetEvents";
+import {droppedMeme} from "../events/VisualAssetEvents";
 import {selectMotivationAssetState} from "../reducers";
 import {LocalMotivationAsset, MotivationAssetState} from "../reducers/MotivationAssetReducer";
 import {makeStyles} from "@material-ui/core/styles";
@@ -107,8 +107,8 @@ const Upload: FC = () => {
                 } as LocalMotivationAsset
               ])
             })), Promise.resolve<LocalMotivationAsset[]>([]))
-      .then(readWaifu => {
-        dispatch(droppedWaifu(readWaifu));
+      .then(readMeme => {
+        dispatch(droppedMeme(readMeme));
       });
   }, [dispatch])
   const {
@@ -144,7 +144,7 @@ const Upload: FC = () => {
         {/*// @ts-ignore*/}
         <div {...getRootProps({style})}>
           <input {...getInputProps()} />
-          <p>Drag/drop some waifu here, or click to select waifu</p>
+          <p>Drag/drop some memes here, or click to select some memes</p>
         </div>
         <aside style={{margin: '2rem 0 0 0'}}>
           <Grid container spacing={3}>
@@ -153,7 +153,7 @@ const Upload: FC = () => {
                 <Grid item key={motivationAssetToUpload.imageFile?.name} xs={6}>
                   <Link style={{textDecoration: 'none', color: 'inherit'}}
                         to={`/assets/view/upload/${motivationAssetToUpload.imageChecksum}`}>
-                    <WaifuDisplay href={motivationAssetToUpload.imageHref}/>
+                    <MemeDisplay href={motivationAssetToUpload.imageHref}/>
                   </Link>
                 </Grid>
               ))

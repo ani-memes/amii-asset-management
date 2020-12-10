@@ -3,14 +3,11 @@ import {MemeAssetCategory} from "../reducers/VisualAssetReducer";
 export enum AssetGroupKeys {
   VISUAL = 'visuals',
   AUDIBLE = 'audible',
-  TEXT = 'text',
-  WAIFU = 'waifu',
-  ANIME = 'anime',
 }
 
 export enum Assets {
   ANIME = 'ANIME',
-  WAIFU = 'WAIFU',
+  CHARACTERS = 'CHARACTERS',
   VISUAL = 'VISUAL',
   TEXT = 'TEXT',
   AUDIBLE = 'AUDIBLE'
