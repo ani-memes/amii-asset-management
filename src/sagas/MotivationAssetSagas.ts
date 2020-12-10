@@ -56,9 +56,11 @@ function* fetchAssetForChecksum(checkSum: string) {
     return cachedAsset;
 }
 
-// todo: this
-function getAudibleMotivationAssets(audibleAssets: AudibleAssetDefinition[], groupId: string) {
-  const relevantAudibleAsset = audibleAssets.find(asset => asset.id === groupId);
+function getAudibleMotivationAssets(
+  audibleAssets: AudibleAssetDefinition[],
+  audibleAssetId: string
+) {
+  const relevantAudibleAsset = audibleAssets.find(asset => asset.id === audibleAssetId);
   if (relevantAudibleAsset) {
     return {
       audio: relevantAudibleAsset,
@@ -72,7 +74,6 @@ function getAudibleMotivationAssets(audibleAssets: AudibleAssetDefinition[], gro
 function* resolveGroupedAudibleAsset(audibleAssetId: string) {
   const {assets: cachedAssets, unsyncedAssets}: AudibleAssetState = yield select(selectAudibleAssetState)
   if (cachedAssets.length) {
-    // todo: viewing unsynced grouped assetsTemp
     const assetFromCache = getAudibleMotivationAssets(cachedAssets, audibleAssetId);
     return assetFromCache || getAudibleMotivationAssets(
       values(unsyncedAssets)

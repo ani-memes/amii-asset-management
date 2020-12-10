@@ -4,7 +4,7 @@ import TreeView from '@material-ui/lab/TreeView';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeItem from '@material-ui/lab/TreeItem';
-import {IconButton, TextField, Tooltip, Typography} from "@material-ui/core";
+import {capitalize, IconButton, MenuItem, TextField, Tooltip, Typography} from "@material-ui/core";
 import {Add, Cancel} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {selectCharacterSourceState} from "../reducers";
@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
   },
   sourceTree: {
     flexGrow: 1,
-    maxWidth: 400,
+    maxWidth: 600,
   },
 }));
 
@@ -56,6 +56,92 @@ const CharacterSubmission: FC<{ onSubmission: (newBestGirl: string) => void, ani
     </IconButton>
   </form>
 }
+
+const genders =
+  Object.entries(Gender)
+    .filter(([label])=>typeof label === 'string')
+    .map(([label, value]) => ({
+      label: capitalize(label.toLowerCase()), value
+    }))
+
+const EditableTreeItemCharacter: FC<{
+  character: CharacterAsset;
+  onUpdate: (updatedCharacter: CharacterAsset) => void
+}> = ({
+        character, onUpdate, children
+      }) => {
+  const [isUpdate, setIsUpdate] = useState(false);
+
+  const {
+    handleSubmit,
+    values: formValues,
+    handleChange,
+  } = useFormik({
+    initialValues: {
+      name: character.name,
+      gender: character.gender,
+    },
+    enableReinitialize: true,
+    onSubmit: ({name, gender}, {resetForm}) => {
+      onUpdate({
+        ...character,
+        name,
+        gender,
+      });
+      resetForm();
+      setIsUpdate(false);
+    }
+  });
+
+  const discardChanges = () => {
+    setIsUpdate(false);
+  }
+
+  return !isUpdate ?
+    <TreeItem nodeId={character.id} label={
+      <Tooltip title={'Click to edit'} placement={'top-start'}><span onClick={e => {
+        setIsUpdate(prevState => !prevState);
+        e.stopPropagation();
+      }}>{character.name}</span></Tooltip>
+    }>
+      {children}
+    </TreeItem>
+    :
+    <form onSubmit={handleSubmit} style={{margin: '1rem 0'}}>
+      <div style={{display: 'flex'}}>
+        <TextField label={'Name'}
+                   name={'value'}
+                   variant={'outlined'}
+                   placeholder={'Add a new best girl'}
+                   value={formValues.name}
+                   onChange={handleChange}
+        />
+        <TextField
+          id="gender"
+          select
+          label="Gender"
+          variant={'outlined'}
+          name='gender'
+          style={{marginLeft: '1rem'}}
+          value={formValues.gender}
+          onChange={handleChange}
+        >
+          {genders.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+        <IconButton component={'button'} type={'submit'}>
+          <Add/>
+        </IconButton>
+        <IconButton component={'span'} onClick={discardChanges}>
+          <Cancel/>
+        </IconButton>
+      </div>
+    </form>
+}
+
 
 const EditableTreeItem: FC<{
   value: string;
@@ -130,11 +216,8 @@ const CharacterSources: FC = () => {
     }));
   };
 
-  const updateCharacter = (characterToUpdate: CharacterAsset) => (newCharacterName: string) => {
-    dispatch(updatedCharacter({
-      ...characterToUpdate,
-      name: newCharacterName,
-    }));
+  const updateCharacter = (theUpdatedCharacter: CharacterAsset) => {
+    dispatch(updatedCharacter(theUpdatedCharacter));
   };
 
   const updateAnime = (animeToUpdate: AnimeAsset) => (newAnimeName: string) => {
@@ -182,10 +265,9 @@ const CharacterSources: FC = () => {
               >
                 {
                   charactersByAnime[dasAnime.id]?.map(character => (
-                    <EditableTreeItem key={character.id}
-                                      value={character.name}
-                                      id={character.id}
-                                      onUpdate={updateCharacter(character)}/>
+                    <EditableTreeItemCharacter key={character.id}
+                                      character={character}
+                                      onUpdate={updateCharacter}/>
                   ))
                 }
                 <CharacterSubmission onSubmission={createCharacter(dasAnime)} anime={dasAnime.name}/>
