@@ -33,11 +33,6 @@ export const MainLocations: RouteDefinition[] = [
   },
 ]
 
-export const SecondaryLocations: RouteDefinition[] = [
-  {name: 'Visual', icon: GifTwoTone, route: '/asset/type/visual', routeComponent: Todo, extraRouteProps: {}},
-  {name: 'Audio', icon: RecordVoiceOver, route: '/asset/type/audio', routeComponent: Todo, extraRouteProps: {}},
-]
-
 const buildListItems = (routeDefinitions: RouteDefinition[], currentRoute: string) =>
   (
     routeDefinitions.map(routeDef => (
@@ -62,11 +57,3 @@ export const mainListItems = (currentRoute: string): JSX.Element => (
   </div>
 );
 
-export const secondaryListItems = (currentRoute: string): JSX.Element => (
-  <div>
-    <ListSubheader inset>Independent Assets</ListSubheader>
-    {
-      buildListItems(SecondaryLocations, currentRoute)
-    }
-  </div>
-);

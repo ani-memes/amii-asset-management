@@ -9,7 +9,7 @@ import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import {mainListItems, MainLocations, secondaryListItems, SecondaryLocations} from './ListItems';
+import {mainListItems, MainLocations} from './ListItems';
 import {useDispatch, useSelector} from "react-redux";
 import {createApplicationInitializedEvent} from "../events/ApplicationLifecycleEvents";
 import {Route, Switch} from 'react-router-dom';
@@ -76,10 +76,7 @@ const App = () => {
   const {location: {pathname}} = useSelector(selectRouterState)
 
   const routes = useMemo(() =>
-      [
-        ...MainLocations,
-        ...SecondaryLocations
-      ].map(routeDef =>
+      MainLocations.map(routeDef =>
         (<Route key={routeDef.route}
                 path={routeDef.route}
                 component={routeDef.routeComponent}
@@ -105,8 +102,6 @@ const App = () => {
         </div>
         <Divider/>
         <List>{mainListItems(pathname)}</List>
-        <Divider/>
-        <List>{secondaryListItems(pathname)}</List>
       </Drawer>
       <SyncChanges/>
 
