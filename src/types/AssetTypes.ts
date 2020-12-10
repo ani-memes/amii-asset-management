@@ -40,12 +40,18 @@ export interface AudibleMemeAsset {
 export interface AnimeAsset {
   id: string; // UUID
   name: string;
-  season: string;
 }
 
+
+export enum Gender {
+  FEMALE,
+  MALE,
+  YES,
+  APACHE_ATTACK_HELICOPTER,
+}
 export interface CharacterAsset {
   id: string; // UUID
   animeId: string; // UUID
   name: string;
-  gender: string;
+  gender: Gender;
 }

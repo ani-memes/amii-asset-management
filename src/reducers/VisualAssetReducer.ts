@@ -1,5 +1,5 @@
 import {LOGGED_OFF} from '../events/SecurityEvents';
-import {LocalAsset, VisualMemeAsset} from "../types/AssetTypes";
+import {AnimeAsset, CharacterAsset, LocalAsset, VisualMemeAsset} from "../types/AssetTypes";
 import {
   CREATED_VISUAL_ASSET,
   FILTERED_VISUAL_ASSETS,
@@ -7,7 +7,7 @@ import {
   RECEIVED_VISUAL_MEME_LIST,
   UPDATED_VISUAL_ASSET_LIST,
 } from "../events/VisualAssetEvents";
-import {HasId, StringDictionary, SyncType, UnsyncedAsset} from "../types/SupportTypes";
+import {StringDictionary, SyncType, UnsyncedAsset} from "../types/SupportTypes";
 
 export enum MemeAssetCategory {
   ACKNOWLEDGEMENT = 0,
@@ -24,22 +24,12 @@ export enum MemeAssetCategory {
   TSUNDERE = 11,
   MOCKING = 12,
   SHOCKED = 13,
-  DISAPPOINTMENT = 14 // you don't want to disappoint your waifu now do you?
+  DISAPPOINTMENT = 14 // you don't want to disappoint your characters now do you?
 }
 
-export interface ImageDimensions {
-  width: number;
-  height: number;
-}
+export  type Anime = AnimeAsset;
 
-export interface Anime extends HasId {
-  name: string;
-}
-
-export interface Waifu extends HasId {
-  name: string;
-  animeId: string;
-}
+export type Waifu = CharacterAsset;
 
 
 export interface LocalVisualAssetDefinition extends VisualMemeAsset, LocalAsset {

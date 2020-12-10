@@ -111,12 +111,12 @@ const MotivationAssetView: FC<Props> = ({
     }
   });
 
-  const {waifu} = useSelector(selectCharacterSourceState)
+  const {characters} = useSelector(selectCharacterSourceState)
 
-  const listOfWaifu = useMemo(() => getValues(waifu).map(bestGirl => ({
+  const listOfCharacters = useMemo(() => getValues(characters).map(bestGirl => ({
     title: bestGirl.name,
     value: bestGirl.id,
-  })), [waifu]);
+  })), [characters]);
 
   return <div style={{display: 'flex', flexDirection: "column", flexGrow: 1}}>
     <div style={{display: 'flex', margin: '0 auto', flexDirection: 'row', flexWrap: 'wrap', width: '100%'}}>
@@ -190,11 +190,11 @@ const MotivationAssetView: FC<Props> = ({
                 <Autocomplete
                   multiple
                   id="characterIds"
-                  options={listOfWaifu}
+                  options={listOfCharacters}
                   getOptionLabel={(option) => option.title}
-                  defaultValue={(values.characterIds || []).map(cat => listOfWaifu.find(
+                  defaultValue={(values.characterIds || []).map(cat => listOfCharacters.find(
                     waifuCat => waifuCat.value === cat
-                  ) || listOfWaifu[0])}
+                  ) || listOfCharacters[0])}
                   style={{marginTop: '1rem'}}
                   filterSelectedOptions
                   onChange={(event, newValue) => {

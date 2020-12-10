@@ -1,5 +1,6 @@
 import {PayloadEvent} from './Event';
-import {Anime, Waifu} from "../reducers/VisualAssetReducer";
+import {Anime} from "../reducers/VisualAssetReducer";
+import {CharacterAsset} from "../types/AssetTypes";
 
 export const RECEIVED_WAIFU_LIST = 'RECEIVED_WAIFU_LIST';
 export const RECEIVED_ANIME_LIST = 'RECEIVED_ANIME_LIST';
@@ -8,11 +9,11 @@ export const CREATED_WAIFU = 'CREATED_WAIFU';
 export const UPDATED_WAIFU = 'UPDATED_WAIFU';
 export const UPDATED_ANIME = 'UPDATED_ANIME';
 
-export const createReceivedWaifuList = (
-  waifu: Waifu[],
-): PayloadEvent<Waifu[]> => ({
+export const createReceivedCharacterList = (
+  characters: CharacterAsset[],
+): PayloadEvent<CharacterAsset[]> => ({
   type: RECEIVED_WAIFU_LIST,
-  payload: waifu,
+  payload: characters,
 });
 
 export const createReceivedAnimeList = (
@@ -29,18 +30,18 @@ export const createdAnime = (
   payload: anime,
 });
 
-export const createdWaifu = (
-  waifu: Waifu,
-): PayloadEvent<Waifu> => ({
+export const createdCharacter = (
+  character: CharacterAsset,
+): PayloadEvent<CharacterAsset> => ({
   type: CREATED_WAIFU,
-  payload: waifu,
+  payload: character,
 });
 
-export const updatedWaifu = (
-  waifu: Waifu,
-): PayloadEvent<Waifu> => ({
+export const updatedCharacter = (
+  character: CharacterAsset,
+): PayloadEvent<CharacterAsset> => ({
   type: UPDATED_WAIFU,
-  payload: waifu,
+  payload: character,
 });
 
 export const updatedAnime = (

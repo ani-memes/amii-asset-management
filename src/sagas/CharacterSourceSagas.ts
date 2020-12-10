@@ -2,38 +2,36 @@ import {all, call, fork, put, select, takeEvery} from 'redux-saga/effects';
 import {INITIALIZED_APPLICATION, REQUESTED_SYNC_CHANGES, syncedChanges} from "../events/ApplicationLifecycleEvents";
 import {selectCharacterSourceState} from "../reducers";
 import {Anime, Waifu} from "../reducers/VisualAssetReducer";
-import {createReceivedAnimeList, createReceivedWaifuList} from "../events/CharacterSourceEvents";
+import {createReceivedAnimeList, createReceivedCharacterList} from "../events/CharacterSourceEvents";
 import {CharacterSourceState} from "../reducers/CharacterSourceReducer";
-import {isEmpty, values} from "lodash";
-import {AssetGroupKeys, Assets} from "../types/AssetTypes";
-import {dictionaryReducer} from "../util/FunctionalTools";
-import {ContentType, downloadAsset, extractAddedAssets, syncSaga, uploadAssetSaga} from "./CommonSagas";
+import {isEmpty} from "lodash";
+import {Assets, CharacterAsset} from "../types/AssetTypes";
+import {apiGet, apiPost, extractAddedAssets, syncSaga} from "./CommonSagas";
 
 function* characterSourceAssetFetchSaga() {
-  const {anime, waifu}: CharacterSourceState = yield select(selectCharacterSourceState)
-  if (!(isEmpty(anime) || isEmpty(waifu))) return;
+  const {anime, characters}: CharacterSourceState = yield select(selectCharacterSourceState)
+  if (!(isEmpty(anime) || isEmpty(characters))) return;
 
-  yield fork(loadWaifuDefinitions);
+  yield fork(loadCharacterDefinitions);
   yield fork(loadAnimeDefinitions);
 }
 
-function* loadWaifuDefinitions() {
-  const waifuList: Waifu[] | undefined = yield call(getWaifuDefinitions);
-  if (waifuList) {
-    yield put(createReceivedWaifuList(waifuList));
+function* loadCharacterDefinitions() {
+  const characterList: Waifu[] | undefined = yield call(getCharacterDefinitions);
+  if (characterList) {
+    yield put(createReceivedCharacterList(characterList));
   }
 }
 
-// todo: consolidate string literals
-const WAIFU_ASSET_LIST_KEY = "waifu/list.json";
-const ANIME_ASSET_LIST_KEY = "anime/list.json";
 
-function* getWaifuDefinitions() {
+function* getCharacterDefinitions() {
   try {
-    const waifuList: Waifu[] = yield call(() => downloadAsset(WAIFU_ASSET_LIST_KEY, true));
-    return waifuList;
+    const allCharacterAssets: CharacterAsset[] = yield call(() =>
+      apiGet('/assets/characters')
+    );
+    return allCharacterAssets;
   } catch (e) {
-    console.warn("Unable to get waifu 囧", e)
+    console.warn("Unable to get characters", e)
   }
 }
 
@@ -46,7 +44,9 @@ function* loadAnimeDefinitions() {
 
 function* getAnimeDefinitions() {
   try {
-    const myAnimeList: Anime[] = yield call(() => downloadAsset(ANIME_ASSET_LIST_KEY, true));
+    const myAnimeList: Anime[] = yield call(() =>
+      apiGet('/assets/anime')
+    );
     return myAnimeList;
   } catch (e) {
     console.warn("Unable to get anime 囧", e)
@@ -56,38 +56,20 @@ function* getAnimeDefinitions() {
 
 function* attemptCharacterSync() {
   try {
-    const freshCharacterList: Waifu[] | undefined = yield call(getWaifuDefinitions);
-    const definedCharacterList = freshCharacterList || [];
-    const {unSyncedWaifu}: CharacterSourceState = yield select(selectCharacterSourceState);
-    const addedWaifu = extractAddedAssets(unSyncedWaifu);
-    const newWaifuList = values(
-      definedCharacterList.concat(addedWaifu)
-        .reduce(dictionaryReducer, {})
-    )
-    yield call(uploadAssetSaga,
-      AssetGroupKeys.WAIFU, 'list.json', // todo: consolidate string literals
-      JSON.stringify(newWaifuList), ContentType.JSON
-    );
+    const {unSyncedCharacters}: CharacterSourceState = yield select(selectCharacterSourceState);
+    const addedCharacters = extractAddedAssets(unSyncedCharacters);
+    yield call(apiPost, '/assets/characters', addedCharacters);
     yield put(syncedChanges(Assets.WAIFU));
   } catch (e) {
-    console.warn("unable to sync waifu for raisins", e)
+    console.warn("unable to sync characters for raisins", e)
   }
 }
 
 function* attemptAnimeSync() {
   try {
-    const freshAnimeList: Anime[] | undefined = yield call(getAnimeDefinitions);
-    const definedAnimeList = freshAnimeList || [];
     const {unSyncedAnime}: CharacterSourceState = yield select(selectCharacterSourceState);
     const addedAnime = extractAddedAssets(unSyncedAnime);
-    const newAnimeList = values(
-      definedAnimeList.concat(addedAnime)
-        .reduce(dictionaryReducer, {})
-    )
-    yield call(uploadAssetSaga,
-      AssetGroupKeys.ANIME, 'list.json',
-      JSON.stringify(newAnimeList), ContentType.JSON
-    );
+    yield call(apiPost, '/assets/anime', addedAnime);
     yield put(syncedChanges(Assets.ANIME));
   } catch (e) {
     console.warn("unable to sync anime for raisins", e)

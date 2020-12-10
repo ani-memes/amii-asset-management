@@ -7,24 +7,24 @@ import {
   UPDATED_ANIME,
   UPDATED_WAIFU
 } from "../events/CharacterSourceEvents";
-import {Anime, Waifu} from "./VisualAssetReducer";
+import {Anime} from "./VisualAssetReducer";
 import {StringDictionary, SyncType, UnsyncedAsset} from "../types/SupportTypes";
 import {dictionaryReducer} from "../util/FunctionalTools";
 import {SYNCED_ASSET} from "../events/ApplicationLifecycleEvents";
-import {Assets} from "../types/AssetTypes";
+import {Assets, CharacterAsset} from "../types/AssetTypes";
 
 
 export interface CharacterSourceState {
   anime: StringDictionary<Anime>;
-  waifu: StringDictionary<Waifu>;
-  unSyncedWaifu: StringDictionary<UnsyncedAsset<Waifu>>;
+  characters: StringDictionary<CharacterAsset>;
+  unSyncedCharacters: StringDictionary<UnsyncedAsset<CharacterAsset>>;
   unSyncedAnime: StringDictionary<UnsyncedAsset<Anime>>;
 }
 
 export const INITIAL_SOURCE_STATE: CharacterSourceState = {
   anime: {},
-  waifu: {},
-  unSyncedWaifu: {},
+  characters: {},
+  unSyncedCharacters: {},
   unSyncedAnime: {},
 };
 
@@ -34,7 +34,7 @@ const characterSourceReducer = (state: CharacterSourceState = INITIAL_SOURCE_STA
     case RECEIVED_WAIFU_LIST:
       return {
         ...state,
-        waifu: action.payload.reduce(dictionaryReducer, {}),
+        characters: action.payload.reduce(dictionaryReducer, {}),
       };
     case RECEIVED_ANIME_LIST:
       return {
@@ -62,16 +62,16 @@ const characterSourceReducer = (state: CharacterSourceState = INITIAL_SOURCE_STA
     case UPDATED_WAIFU:
       return {
         ...state,
-        waifu: {
-          ...state.waifu,
+        characters: {
+          ...state.characters,
           [action.payload.id]: action.payload
         },
-        unSyncedWaifu: {
-          ...state.unSyncedWaifu,
+        unSyncedCharacters: {
+          ...state.unSyncedCharacters,
           [action.payload.id]: {
             syncType: SyncType.CREATE,
             asset: action.payload,
-          } as UnsyncedAsset<Waifu>
+          } as UnsyncedAsset<CharacterAsset>
         },
       };
 
@@ -80,7 +80,7 @@ const characterSourceReducer = (state: CharacterSourceState = INITIAL_SOURCE_STA
         case Assets.WAIFU: {
           return {
             ...state,
-            unSyncedWaifu: {},
+            unSyncedCharacters: {},
           }
         }
         case Assets.ANIME: {
