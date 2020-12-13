@@ -50,7 +50,6 @@ const memeAssetCategories = [
   {title: 'Welcoming', value: MemeAssetCategory.WELCOMING},
   {title: 'Departure', value: MemeAssetCategory.DEPARTURE},
   {title: 'Encouragement', value: MemeAssetCategory.ENCOURAGEMENT},
-  {title: 'Tsundere', value: MemeAssetCategory.TSUNDERE},
   {title: 'Mocking', value: MemeAssetCategory.MOCKING},
   {title: 'Shocked', value: MemeAssetCategory.SHOCKED},
   {title: 'Disappointment', value: MemeAssetCategory.DISAPPOINTMENT},

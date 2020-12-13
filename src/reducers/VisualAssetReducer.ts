@@ -21,10 +21,9 @@ export enum MemeAssetCategory {
   WELCOMING = 8,
   DEPARTURE = 9,
   ENCOURAGEMENT = 10,
-  TSUNDERE = 11,
-  MOCKING = 12,
-  SHOCKED = 13,
-  DISAPPOINTMENT = 14 // you don't want to disappoint your characters now do you?
+  MOCKING = 11,
+  SHOCKED = 12,
+  DISAPPOINTMENT = 13,
 }
 
 export interface LocalVisualAssetDefinition extends VisualMemeAsset, LocalAsset {
