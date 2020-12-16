@@ -5,7 +5,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeItem from '@material-ui/lab/TreeItem';
 import {capitalize, IconButton, MenuItem, TextField, Tooltip, Typography} from "@material-ui/core";
-import {Add, Cancel} from "@material-ui/icons";
+import {Add, Cancel, Save} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {selectCharacterSourceState} from "../reducers";
 import {groupBy, values} from 'lodash';
@@ -59,7 +59,6 @@ const CharacterSubmission: FC<{ onSubmission: (newBestGirl: string) => void, ani
 
 const genders =
   Object.entries(Gender)
-    .filter(([label])=>typeof label === 'string')
     .map(([label, value]) => ({
       label: capitalize(label.toLowerCase()), value
     }))
@@ -110,9 +109,9 @@ const EditableTreeItemCharacter: FC<{
     <form onSubmit={handleSubmit} style={{margin: '1rem 0'}}>
       <div style={{display: 'flex'}}>
         <TextField label={'Name'}
-                   name={'value'}
+                   name={'name'}
                    variant={'outlined'}
-                   placeholder={'Add a new best girl'}
+                   placeholder={'Add a new character'}
                    value={formValues.name}
                    onChange={handleChange}
         />
@@ -133,7 +132,7 @@ const EditableTreeItemCharacter: FC<{
           ))}
         </TextField>
         <IconButton component={'button'} type={'submit'}>
-          <Add/>
+          <Save/>
         </IconButton>
         <IconButton component={'span'} onClick={discardChanges}>
           <Cancel/>
