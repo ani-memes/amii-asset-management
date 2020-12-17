@@ -24,6 +24,7 @@ export enum MemeAssetCategory {
   MOCKING = 11,
   SHOCKED = 12,
   DISAPPOINTMENT = 13,
+  ALERT = 14
 }
 
 export interface LocalVisualAssetDefinition extends VisualMemeAsset, LocalAsset {

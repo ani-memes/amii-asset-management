@@ -53,6 +53,7 @@ const memeAssetCategories = [
   {title: 'Mocking', value: MemeAssetCategory.MOCKING},
   {title: 'Shocked', value: MemeAssetCategory.SHOCKED},
   {title: 'Disappointment', value: MemeAssetCategory.DISAPPOINTMENT},
+  {title: 'Alert', value: MemeAssetCategory.ALERT},
 ]
 
 interface Props {
