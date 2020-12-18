@@ -1,5 +1,4 @@
-import {Storage, Amplify} from "aws-amplify";
-import {API} from '@aws-amplify/api'
+import {Storage, API} from "aws-amplify";
 import {AssetDefinition, AssetGroupKeys, Assets, LocalAsset} from "../types/AssetTypes";
 import {MotivationAssetState} from "../reducers/MotivationAssetReducer";
 import {call, put, select} from "redux-saga/effects";
@@ -13,15 +12,7 @@ import {AWSConfig} from "../config/AwsConfig";
 // import axios from "axios";
 // import AWS from 'aws-sdk';
 
-Amplify.configure(AWSConfig)
-export function downloadAsset<T>(key: string, noCache = false): Promise<T> {
-  return Storage.get(key, {
-    download: true,
-    ...(noCache ? {cacheControl: 'no-cache'} : {}),
-  })
-    .then((result: any) => result.Body.text())
-    .then(JSON.parse);
-}
+API.configure(AWSConfig);
 
 // eslint-disable-next-line
 export function* syncSaga(asset: Assets, sagaToRun: () => void) {

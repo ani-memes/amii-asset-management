@@ -4,6 +4,9 @@ import React, {
 } from "react";
 import {Auth, Hub} from 'aws-amplify';
 import Login from "./Login";
+import {AWSConfig} from "../config/AwsConfig";
+
+Auth.configure(AWSConfig)
 
 export const withAuthenticator = (Component: FC): FC => {
   const Authenticator = () => {
