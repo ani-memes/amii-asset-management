@@ -40,8 +40,8 @@ export const AWSConfig = {
     customPrefix: {
       public: ''
     }
-  }
-}
+  },
+};
 
 // "redirectSignIn": "https://amii-assets-nonprod.unthrottled.io/oauth/callback/,http://localhost:3000/oauth/callback/",
 //   "redirectSignOut": "https://amii-assets-nonprod.unthottled.io/oauth/logout/,http://localhost:3000/oauth/logout/",

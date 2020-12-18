@@ -1,4 +1,4 @@
-import {Storage} from "aws-amplify";
+import {Storage, API} from "aws-amplify";
 import {AssetDefinition, AssetGroupKeys, Assets, LocalAsset} from "../types/AssetTypes";
 import {MotivationAssetState} from "../reducers/MotivationAssetReducer";
 import {call, put, select} from "redux-saga/effects";
@@ -8,8 +8,8 @@ import {values} from "lodash";
 import {readFile} from "../components/Upload";
 import md5 from "js-md5";
 import {completedSyncAttempt, startedSyncAttempt} from "../events/ApplicationLifecycleEvents";
-import axios from "axios";
-import AWS from 'aws-sdk';
+// import axios from "axios";
+// import AWS from 'aws-sdk';
 
 export function downloadAsset<T>(key: string, noCache = false): Promise<T> {
   return Storage.get(key, {
@@ -38,32 +38,32 @@ export enum ContentType {
   TEXT = "text/plain",
 }
 
-const s3Client = new AWS.S3({
-  credentials: {
-    accessKeyId: 'ayy',
-    secretAccessKey: 'lmao',
-  },
-  region: 'us-east-1',
-  endpoint: `http://localhost:4566`,
-  s3ForcePathStyle: true,
-});
-const assetUpload = <T>(assetKey: string, asset: T, type: ContentType | string): Promise<any> =>
-  new Promise<any>((res, rej) =>
-    s3Client.upload({
-      Bucket: 'demo-bucket',
-      Key: assetKey,
-      Body: asset,
-      ACL: 'public-read',
-      ContentType: type
-    }, (err, resp) => {
-      console.log(resp)
-      err ? rej(err) : res(resp);
-    })
-  )
-// Storage.put(assetKey, asset, {
-//   contentType: type,
-//   level: 'public',
+// const s3Client = new AWS.S3({
+//   credentials: {
+//     accessKeyId: 'ayy',
+//     secretAccessKey: 'lmao',
+//   },
+//   region: 'us-east-1',
+//   endpoint: `http://localhost:4566`,
+//   s3ForcePathStyle: true,
 // });
+const assetUpload = <T>(assetKey: string, asset: T, type: ContentType | string): Promise<any> =>
+  // new Promise<any>((res, rej) =>
+  //   s3Client.upload({
+  //     Bucket: 'demo-bucket',
+  //     Key: assetKey,
+  //     Body: asset,
+  //     ACL: 'public-read',
+  //     ContentType: type
+  //   }, (err, resp) => {
+  //     console.log(resp)
+  //     err ? rej(err) : res(resp);
+  //   })
+  // )
+Storage.put(assetKey, asset, {
+  contentType: type,
+  level: 'public',
+});
 
 /**
  * Good for uploading a single asset (such as list metadata)
@@ -130,8 +130,17 @@ export function* uploadAssetsSaga<T extends (AssetDefinition & LocalAsset)>(
 
 
 export const apiGet = <T>(path: string): Promise<T> =>
-  axios.get(`http://localhost:4000${path}`)
+  API.get('amiiassetadmiiapi', path, {
+
+  })
     .then(res => res.data)
+  // axios.get(`http://localhost:4000${path}`)
+  //   .then(res => res.data)
 
 export const apiPost = <T>(path: string, payload: T): Promise<void> =>
-  axios.post(`http://localhost:4000${path}`, payload)
+  API.post('amiiassetadmiiapi', path, {
+    body: payload
+  })
+    .then(res => res.data)
+
+// axios.post(`http://localhost:4000${path}`, payload)
