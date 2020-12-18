@@ -79,7 +79,8 @@
     "cognito8be6495e": {
       "service": "Cognito",
       "serviceType": "managed",
-      "providerPlugin": "awscloudformation"
+      "providerPlugin": "awscloudformation",
+      "dependsOn": []
     }
   }
 }

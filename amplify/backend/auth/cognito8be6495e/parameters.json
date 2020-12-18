@@ -43,5 +43,16 @@
             "UnauthRole",
             "Arn"
         ]
-    }
+    },
+    "hostedUI": true,
+    "useDefault": "defaultSocial",
+    "hostedUIDomainName": "amiiassetmanagementb4ea5531-b4ea5531",
+    "authProvidersUserPool": [
+        "Google"
+    ],
+    "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://amii-assets-nonprod.unthrottled.io/oauth/callback/\",\"http://localhost:3000/oauth/callback/\"],\"LogoutURLs\":[\"https://amii-assets-nonprod.unthrottled.io/oauth/logout/\"]}",
+    "userPoolGroupList": [],
+    "serviceName": "Cognito",
+    "dependsOn": []
 }
