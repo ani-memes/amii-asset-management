@@ -1,0 +1,42 @@
+{
+    "paths": [
+        {
+            "name": "/assets",
+            "lambdaFunction": "amiiassetadminapi",
+            "privacy": {
+                "private": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ]
+            },
+            "policyResourceName": "/assets"
+        }
+    ],
+    "resourceName": "amiiassetadmiiapi",
+    "apiName": "amiiassetadmiiapi",
+    "functionArns": [
+        {
+            "lambdaFunction": "amiiassetadminapi"
+        }
+    ],
+    "privacy": {
+        "auth": 1,
+        "unauth": 0,
+        "authRoleName": "amplify-amiiassetmanagement-nonprod-41452-authRole",
+        "unAuthRoleName": "amplify-amiiassetmanagement-nonprod-41452-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "amiiassetadminapi",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}

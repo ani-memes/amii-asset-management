@@ -1,0 +1,35 @@
+{
+    "paths": [
+        {
+            "name": "/public/assets/{assetType}",
+            "lambdaFunction": "amiipublicassets",
+            "privacy": {
+                "open": true
+            },
+            "policyResourceName": "/public/assets/*"
+        }
+    ],
+    "resourceName": "amiiassetapipublic",
+    "apiName": "amiiassetapipublic",
+    "functionArns": [
+        {
+            "lambdaFunction": "amiipublicassets"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "amplify-amiiassetmanagement-nonprod-41452-authRole",
+        "unAuthRoleName": "amplify-amiiassetmanagement-nonprod-41452-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "amiipublicassets",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}
