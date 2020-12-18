@@ -1,10 +1,5 @@
-// import awsExports from "../aws-exports";
-const awsExports = {
-  oauth: {
-    redirectSignIn: '',
-    redirectSignOut: '',
-  }
-}
+import awsExports from "../aws-exports";
+
 const isNonProd = window.location.hostname.indexOf('non-prod') > -1;
 const isLocal = Boolean(
   window.location.hostname === "localhost" ||
