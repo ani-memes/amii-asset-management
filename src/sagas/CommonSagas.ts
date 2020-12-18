@@ -1,4 +1,5 @@
-import {Storage, API} from "aws-amplify";
+import {Storage, Amplify} from "aws-amplify";
+import {API} from '@aws-amplify/api'
 import {AssetDefinition, AssetGroupKeys, Assets, LocalAsset} from "../types/AssetTypes";
 import {MotivationAssetState} from "../reducers/MotivationAssetReducer";
 import {call, put, select} from "redux-saga/effects";
@@ -8,9 +9,11 @@ import {values} from "lodash";
 import {readFile} from "../components/Upload";
 import md5 from "js-md5";
 import {completedSyncAttempt, startedSyncAttempt} from "../events/ApplicationLifecycleEvents";
+import {AWSConfig} from "../config/AwsConfig";
 // import axios from "axios";
 // import AWS from 'aws-sdk';
 
+Amplify.configure(AWSConfig)
 export function downloadAsset<T>(key: string, noCache = false): Promise<T> {
   return Storage.get(key, {
     download: true,
@@ -133,7 +136,7 @@ export const apiGet = <T>(path: string): Promise<T> =>
   API.get('amiiassetadmiiapi', path, {
 
   })
-    .then(res => res.data)
+    .then((res: any) => res.data)
   // axios.get(`http://localhost:4000${path}`)
   //   .then(res => res.data)
 
@@ -141,6 +144,6 @@ export const apiPost = <T>(path: string, payload: T): Promise<void> =>
   API.post('amiiassetadmiiapi', path, {
     body: payload
   })
-    .then(res => res.data)
+    .then((res: any) => res.data)
 
 // axios.post(`http://localhost:4000${path}`, payload)

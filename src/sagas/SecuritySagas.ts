@@ -1,5 +1,5 @@
 import {all, call, put, takeEvery} from 'redux-saga/effects';
-import Auth from "@aws-amplify/auth";
+import {Auth} from "aws-amplify";
 import {createLoggedOffEvent, REQUESTED_LOGOFF} from "../events/SecurityEvents";
 
 function* logoffSaga() {

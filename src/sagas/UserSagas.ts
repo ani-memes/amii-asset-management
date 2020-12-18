@@ -1,13 +1,14 @@
 import {all, call, put, select, takeEvery} from 'redux-saga/effects';
 import {INITIALIZED_APPLICATION} from "../events/ApplicationLifecycleEvents";
-import Auth from "@aws-amplify/auth";
+import {Auth} from "aws-amplify";
 import {createReceivedUserProfileEvent} from "../events/UserEvents";
 import {selectRouterState, selectUserState} from "../reducers";
 import {push} from "connected-react-router";
+import {UserState} from "../reducers/UserReducer";
 
 function* userProfileFetchSaga() {
-  const {profile} = yield select(selectUserState)
-  if (profile) return;
+  const {profile}: UserState = yield select(selectUserState)
+  if (profile?.attributes) return;
 
   try {
     const userProfile = yield call(() => Auth.currentUserInfo());
