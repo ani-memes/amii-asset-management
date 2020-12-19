@@ -1,4 +1,9 @@
-const bodyParser = require('body-parser');
+/* Amplify Params - DO NOT EDIT
+	ENV
+	REGION
+	STORAGE_AMIIASSETSTORAGE_ARN
+	STORAGE_AMIIASSETSTORAGE_NAME
+Amplify Params - DO NOT EDIT */const bodyParser = require('body-parser');
 const express = require('express');
 
 // declare a new express app

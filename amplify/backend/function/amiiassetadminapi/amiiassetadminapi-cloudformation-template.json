@@ -63,6 +63,12 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
+            },
+            "STORAGE_AMIIASSETSTORAGE_NAME": {
+              "Ref": "storageamiiassetstorageName"
+            },
+            "STORAGE_AMIIASSETSTORAGE_ARN": {
+              "Ref": "storageamiiassetstorageArn"
             }
           }
         },
@@ -77,7 +83,7 @@
         "Timeout": "25",
         "Code": {
           "S3Bucket": "amplify-amiiassetmanagement-nonprod-41452-deployment",
-          "S3Key": "amplify-builds/amiiassetadminapi-577a37486e7959546c33-build.zip"
+          "S3Key": "amplify-builds/amiiassetadminapi-49755268337a53465732-build.zip"
         }
       }
     },
@@ -169,6 +175,58 @@
                 "dynamodb:PutItem",
                 "dynamodb:UpdateItem",
                 "dynamodb:DeleteItem"
+              ],
+              "Resource": [
+                {
+                  "Ref": "storageamiiassetstorageArn"
+                },
+                {
+                  "Fn::Join": [
+                    "/",
+                    [
+                      {
+                        "Ref": "storageamiiassetstorageArn"
+                      },
+                      "index/*"
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "AmplifyResourcesPolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "amplify-lambda-execution-policy",
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:Put*",
+                "dynamodb:Create*",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:Get*",
+                "dynamodb:BatchGetItem",
+                "dynamodb:List*",
+                "dynamodb:Describe*",
+                "dynamodb:Scan",
+                "dynamodb:Query",
+                "dynamodb:Update*",
+                "dynamodb:RestoreTable*",
+                "dynamodb:Delete*"
               ],
               "Resource": [
                 {
