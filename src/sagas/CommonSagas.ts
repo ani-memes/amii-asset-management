@@ -9,10 +9,11 @@ import {readFile} from "../components/Upload";
 import md5 from "js-md5";
 import {completedSyncAttempt, startedSyncAttempt} from "../events/ApplicationLifecycleEvents";
 import {AWSConfig} from "../config/AwsConfig";
-import axios from "axios";
+// import axios from "axios";
 // import AWS from 'aws-sdk';
 
 API.configure(AWSConfig);
+Storage.configure(AWSConfig)
 
 // eslint-disable-next-line
 export function* syncSaga(asset: Assets, sagaToRun: () => void) {
@@ -126,18 +127,17 @@ export function* uploadAssetsSaga<T extends (AssetDefinition & LocalAsset)>(
 export const apiGet = <T>(path: string): Promise<T> =>
   Auth.currentSession()
     .then(res => res.getIdToken().getJwtToken())
-    // .then(token => API.get('amiiassetadmiiapi', path, {
-    //     headers: {
-    //       Authorization: `Bearer ${token}`
-    //     }
-    //   })
-    // )
-    // .catch(()=>API.get('amiiassetapipublic', `/public${path}`, {}))
-    .then(token => axios.get(`http://localhost:4000${path}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }))
+    .then(token => API.get('amiiassetadmiiapi', path, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+    )
+    // .then(token => axios.get(`http://localhost:4000${path}`, {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`
+    //   }
+    // }))
     .then((res: any) => res.data)
 
 

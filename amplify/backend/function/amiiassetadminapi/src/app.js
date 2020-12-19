@@ -12,6 +12,26 @@ app.use(function (req, res, next) {
   next()
 });
 
+const jwtDecode = require('jwt-decode');
+app.use((req, res, next) => {
+  const header = req.header("Authorization");
+  if (req.method === "GET" || req.method === "OPTIONS") {
+    next();
+  } else if (header && header.startsWith("Bearer ")) {
+    const token = jwtDecode(header.substr("Bearer ".length))
+    const groups = token['cognito:groups'];
+    if (groups && groups.find && groups.find(group => group === 'Admins')) {
+      next()
+    } else {
+      res.status(403)
+      res.send()
+    }
+  } else {
+    res.status(401)
+    res.send()
+  }
+});
+
 app.use('/assets', require('./adminAPI'))
 
 const port = 3000;

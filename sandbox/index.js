@@ -15,22 +15,23 @@ app.use(function (req, res, next) {
 const jwtDecode = require('jwt-decode');
 app.use((req, res, next) => {
   const header = req.header("Authorization");
-  if(header && header.startsWith("Bearer ")) {
+  if (req.method === "GET" || req.method === "OPTIONS") {
+    next();
+  } else if (header && header.startsWith("Bearer ")) {
     const token = jwtDecode(header.substr("Bearer ".length))
     const groups = token['cognito:groups'];
-    if(groups && groups.find && groups.find(group => group === 'Admins')) {
+    if (groups && groups.find && groups.find(group => group === 'Admins')) {
       next()
     } else {
       res.status(403)
       res.send()
     }
-  } else if(req.method !== "OPTIONS") {
+  } else {
     res.status(401)
     res.send()
-  } else {
-    next()
   }
-})
+});
+
 
 app.use('/public/assets', require('./api'))
 
@@ -40,6 +41,4 @@ const port = 4000;
 app.listen(port, function () {
   console.log(`App started ${port}`)
 });
-
-process.on('SIGINT', () => { console.log("Bye bye!"); process.exit(); });
 
