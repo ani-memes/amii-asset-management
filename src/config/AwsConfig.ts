@@ -24,6 +24,12 @@ const [
 
 export const AWSConfig = {
   ...awsExports,
+  Auth: {
+    identityPoolId: awsExports.aws_cognito_identity_pool_id,
+    region: awsExports.aws_cognito_region,
+    userPoolId: awsExports.aws_user_pools_id,
+    userPoolWebClientId: awsExports.aws_user_pools_web_client_id,
+  },
   oauth: {
     ...awsExports.oauth,
     domain: isNonProd || isLocal ?

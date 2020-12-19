@@ -3,6 +3,7 @@ Things that are different:
 - asset api manual authorization
   - Trust relationship between admin role and IDP
   - remove from auth role
+  - cognito authorizer https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-integrate-with-cognito.html
 - IDP:
   - attribute mappings for google IDP
   - remove cognito pool

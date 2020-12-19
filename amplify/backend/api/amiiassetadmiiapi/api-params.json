@@ -12,8 +12,7 @@
                     "/PATCH",
                     "/DELETE"
                 ]
-            },
-            "policyResourceName": "/assets"
+            }
         }
     ],
     "resourceName": "amiiassetadmiiapi",
@@ -38,5 +37,6 @@
                 "Arn"
             ]
         }
-    ]
+    ],
+    "uuid": "a0d241fc"
 }

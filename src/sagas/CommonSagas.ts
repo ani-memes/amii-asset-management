@@ -1,4 +1,4 @@
-import {Storage, API} from "aws-amplify";
+import {API, Auth, Storage} from "aws-amplify";
 import {AssetDefinition, AssetGroupKeys, Assets, LocalAsset} from "../types/AssetTypes";
 import {MotivationAssetState} from "../reducers/MotivationAssetReducer";
 import {call, put, select} from "redux-saga/effects";
@@ -54,10 +54,10 @@ const assetUpload = <T>(assetKey: string, asset: T, type: ContentType | string):
   //     err ? rej(err) : res(resp);
   //   })
   // )
-Storage.put(assetKey, asset, {
-  contentType: type,
-  level: 'public',
-});
+  Storage.put(assetKey, asset, {
+    contentType: type,
+    level: 'public',
+  });
 
 /**
  * Good for uploading a single asset (such as list metadata)
@@ -124,12 +124,18 @@ export function* uploadAssetsSaga<T extends (AssetDefinition & LocalAsset)>(
 
 
 export const apiGet = <T>(path: string): Promise<T> =>
-  API.get('amiiassetadmiiapi', path, {
-
-  })
+  Auth.currentSession()
+    .then(res => res.getIdToken().getJwtToken())
+    .then(token => API.get('amiiassetadmiiapi', path, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+    )
+    // .catch(()=>API.get('amiiassetapipublic', `/public${path}`, {}))
     .then((res: any) => res.data)
-  // axios.get(`http://localhost:4000${path}`)
-  //   .then(res => res.data)
+// axios.get(`http://localhost:4000${path}`)
+//   .then(res => res.data)
 
 export const apiPost = <T>(path: string, payload: T): Promise<void> =>
   API.post('amiiassetadmiiapi', path, {
