@@ -133,18 +133,23 @@ export const apiGet = <T>(path: string): Promise<T> =>
         }
       })
     )
-    // .then(token => axios.get(`http://localhost:4000${path}`, {
-    //   headers: {
-    //     Authorization: `Bearer ${token}`
-    //   }
-    // }))
-    .then((res: any) => res.data)
+// .then(token => axios.get(`http://localhost:4000${path}`, {
+//   headers: {
+//     Authorization: `Bearer ${token}`
+//   }
+// }))
+// .then((res: any) => {res.data)
 
 
 export const apiPost = <T>(path: string, payload: T): Promise<void> =>
-  API.post('amiiassetadmiiapi', path, {
-    body: payload
-  })
-    .then((res: any) => res.data)
+  Auth.currentSession()
+    .then(res => res.getIdToken().getJwtToken())
+    .then(token => API.post('amiiassetadmiiapi', path, {
+        body: payload,
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+    )
 
 // axios.post(`http://localhost:4000${path}`, payload)
