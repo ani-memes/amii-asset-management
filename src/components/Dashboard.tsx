@@ -27,8 +27,8 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <MUILink color="inherit" href="https://material-ui.com/">
-        Your Website
+      <MUILink color="inherit" href="https://unthrottled.io">
+        Unthrottled
       </MUILink>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -64,10 +64,9 @@ const Dashboard: FC = () => {
         loadMoreDisplay={<h3 style={{margin: '2rem auto'}}>Hang tight Senpai...</h3>}
       >
         <Grid container spacing={3}>
-
           {
             viewedVisualAssets.map(visualMemeAsset => (
-              <Grid item key={visualMemeAsset.id} xs={6}>
+              <Grid item key={visualMemeAsset.id} >
                 <Link style={{textDecoration: 'none', color: 'inherit'}} to={`/assets/view/${visualMemeAsset.id}`}>
                   <MemeDisplay href={buildS3ObjectLink(
                     // todo: consolidate
