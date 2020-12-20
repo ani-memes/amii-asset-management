@@ -26,15 +26,15 @@ export const LoadingIndicator: FC<Props> = ({
     <Loader
       type={'Triangle'}
       color={"var(--accent-color)"}
-      height={320}
-      width={320}
+      height={375}
+      width={375}
     >
     </Loader>
     <div style={{
       ...(overlay ? {
         position: 'absolute',
-        left: '25%',
-        top: '40%',
+        left: '30%',
+        top: '45%',
       } : {
         margin: '-200px 0 0 75px'
       })
