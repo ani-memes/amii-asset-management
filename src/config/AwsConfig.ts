@@ -1,6 +1,7 @@
 import awsExports from "../aws-exports";
 
-const isNonProd = window.location.hostname.indexOf('non-prod') > -1;
+const isNonProd = window.location.hostname.indexOf('non-prod') > -1 ||
+  window.location.hostname.indexOf('amplifyapp') > -1;
 const isLocal = Boolean(
   window.location.hostname === "localhost" ||
   // [::1] is the IPv6 localhost address.
