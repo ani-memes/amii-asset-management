@@ -3,7 +3,8 @@ import {Paper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 
 interface Props {
-  href: string
+  href: string,
+  deleted?: boolean
 }
 
 const useStyles = makeStyles(theme => ({
@@ -19,11 +20,14 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const MemeDisplay: FC<Props> = ({
-                                   href
-                                 }) => {
+                                  href,
+                                  deleted
+                                }) => {
   const classes = useStyles();
   return (
-    <Paper className={classes.paper}>
+    <Paper className={classes.paper} style={{
+      ...(deleted ? {opacity: 0.35} : {})
+    }}>
       <img src={href}
            style={{
              borderRadius: '0.5rem',

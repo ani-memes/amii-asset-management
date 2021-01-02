@@ -14,6 +14,8 @@ import {getFileType, readFile} from "./Upload";
 import {AssetGroupKeys} from "../types/AssetTypes";
 import {updatedMotivationAsset} from "../events/MotivationAssetEvents";
 import md5 from "js-md5";
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -90,6 +92,7 @@ const MotivationAssetView: FC<Props> = ({
       soundChecksum: motivationAsset?.audioChecksum,
       soundFile: undefined as File | undefined,
       title: motivationAsset?.title,
+      deleted: motivationAsset?.visuals?.del || false,
     },
     enableReinitialize: true,
     onSubmit: (values, {setSubmitting}) => {
@@ -103,7 +106,8 @@ const MotivationAssetView: FC<Props> = ({
           path: values.objectKey,
           alt: values.imageAlt || '',
           cat: values.categories,
-          char: values.characterIds
+          char: values.characterIds,
+          ...(values.deleted ? {del: true} : {})
         }
       }))
       setSubmitting(false);
@@ -252,6 +256,20 @@ const MotivationAssetView: FC<Props> = ({
                    }}
                    accept={"audio/*"}/>
           </div>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={values.deleted}
+                onChange={handleChange}
+                name="deleted"
+                color="secondary"
+              />
+            }
+            style={{
+              marginTop: '1rem',
+            }}
+            label="Delete"
+          />
         </div>
       </div>
     </div>

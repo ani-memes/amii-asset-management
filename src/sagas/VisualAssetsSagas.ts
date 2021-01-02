@@ -50,6 +50,7 @@ const VISUAL_ASSET_WHITELIST = [
   'cat',
   'char',
   'aud',
+  'del',
 ]
 
 // todo: this is just for dropped assets

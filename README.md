@@ -101,3 +101,6 @@ This application uses the [AWS Amplify](https://aws.amazon.com/amplify/) platfor
 - https://docs.amplify.aws/lib/auth/social/q/platform/js
 - https://aws.amazon.com/blogs/mobile/building-fine-grained-authorization-using-amazon-cognito-user-pools-groups/
 - https://stackoverflow.com/questions/44043289/aws-invalid-identity-pool-configuration-check-assigned-iam-roles-for-this-poo
+
+aws --endpoint-url=http://localhost:4566 s3 mb s3://demo-bucket
+aws --endpoint-url=http://localhost:4566 s3api put-bucket-acl --bucket demo-bucket --acl public-read

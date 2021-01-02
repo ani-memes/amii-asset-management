@@ -27,6 +27,7 @@ export interface VisualMemeAsset extends AssetDefinition {
   cat: MemeAssetCategory[]; // assetCategories
   char: string[]; // characters appearing asset
   aud?: string; // ID of audible asset
+  del?: boolean;
 }
 
 export interface AudibleMemeAsset {

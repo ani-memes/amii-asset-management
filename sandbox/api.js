@@ -7,7 +7,7 @@ const {
   sortKeyIndex,
   tableName,
   dynamodb,
-  schema : {
+  schema: {
     sortKey,
     timeStampAttribute,
   }
@@ -34,7 +34,9 @@ apiRouter.get(
 
     dynamodb.query(queryParams, handleClientResponse(
       res,
-      extractItems
+      data =>
+        extractItems(data)
+          .filter(item => changedSince || !item.del)
     ));
   });
 

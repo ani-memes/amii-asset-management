@@ -68,7 +68,9 @@ const Dashboard: FC = () => {
             viewedVisualAssets.map(visualMemeAsset => (
               <Grid item key={visualMemeAsset.id} >
                 <Link style={{textDecoration: 'none', color: 'inherit'}} to={`/assets/view/${visualMemeAsset.id}`}>
-                  <MemeDisplay href={buildS3ObjectLink(
+                  <MemeDisplay
+                    deleted={visualMemeAsset.del}
+                    href={buildS3ObjectLink(
                     // todo: consolidate
                     `visuals/${visualMemeAsset.path}`
                   )}/>

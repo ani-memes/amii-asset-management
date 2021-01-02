@@ -11,6 +11,7 @@ interface VisualMemeAsset {
   cat: number[]; // assetCategories
   char: string[]; // characters appearing asset
   aud?: string; // ID of audible asset
+  del?: boolean;
 }
 ```
 #### AudibleMemeAsset
