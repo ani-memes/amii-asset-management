@@ -16,6 +16,7 @@ export enum Assets {
 export interface AssetDefinition {
   id: string; // MD5 checksum
   path: string;
+  del?: boolean;
 }
 
 export interface LocalAsset {
@@ -27,7 +28,6 @@ export interface VisualMemeAsset extends AssetDefinition {
   cat: MemeAssetCategory[]; // assetCategories
   char: string[]; // characters appearing asset
   aud?: string; // ID of audible asset
-  del?: boolean;
 }
 
 export interface AudibleMemeAsset {
@@ -47,6 +47,7 @@ export enum Gender {
   YES,
   APACHE_ATTACK_HELICOPTER,
 }
+
 export interface CharacterAsset {
   id: string; // UUID
   animeId: string; // UUID
