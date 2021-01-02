@@ -1,7 +1,8 @@
 import {LOGGED_OFF} from '../events/SecurityEvents';
-import {AudibleMemeAsset, LocalAsset} from "../types/AssetTypes";
+import {Assets, AudibleMemeAsset, LocalAsset} from "../types/AssetTypes";
 import {CREATED_AUDIBLE_ASSET, RECEIVED_AUDIBLE_ASSET_LIST} from "../events/AudibleAssetEvents";
 import {StringDictionary, SyncType, UnsyncedAsset} from "../types/SupportTypes";
+import {SYNCED_ASSET} from "../events/ApplicationLifecycleEvents";
 
 export type AudibleAssetDefinition = AudibleMemeAsset
 
@@ -26,6 +27,17 @@ const audibleAssetReducer = (state: AudibleAssetState = INITIAL_AUDIBLE_ASSET_ST
         ...state,
         assets: action.payload,
       };
+
+    case SYNCED_ASSET: {
+      if(action.payload === Assets.AUDIBLE) {
+        return {
+          ...state,
+          unsyncedAssets: {},
+        }
+      } else {
+        return state
+      }
+    }
 
     case CREATED_AUDIBLE_ASSET: {
       return {

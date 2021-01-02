@@ -1,5 +1,5 @@
 import {LOGGED_OFF} from '../events/SecurityEvents';
-import {LocalAsset, VisualMemeAsset} from "../types/AssetTypes";
+import {Assets, LocalAsset, VisualMemeAsset} from "../types/AssetTypes";
 import {
   CREATED_VISUAL_ASSET,
   FILTERED_VISUAL_ASSETS,
@@ -8,6 +8,7 @@ import {
   UPDATED_VISUAL_ASSET_LIST,
 } from "../events/VisualAssetEvents";
 import {StringDictionary, SyncType, UnsyncedAsset} from "../types/SupportTypes";
+import {SYNCED_ASSET} from "../events/ApplicationLifecycleEvents";
 
 export enum MemeAssetCategory {
   ACKNOWLEDGEMENT = 0,
@@ -64,6 +65,16 @@ const visualAssetReducer = (state: VisualAssetState = INITIAL_VISUAL_ASSET_STATE
       return {
         ...state,
         displayAssetList: action.payload
+      }
+    }
+    case SYNCED_ASSET: {
+      if(action.payload === Assets.VISUAL) {
+        return {
+          ...state,
+          unsyncedAssets: {},
+        }
+      } else {
+        return state
       }
     }
     case CREATED_VISUAL_ASSET: {
