@@ -35,7 +35,9 @@ function* visualAssetFetchSaga() {
 
   try {
     const visualAssets = yield call(fetchVisualAssetList);
-    yield put(createReceivedVisualMemeList(visualAssets));
+    yield put(createReceivedVisualMemeList(
+      visualAssets.reverse()
+    ));
   } catch (e) {
     console.warn("Unable to get visual asset list", e)
   }
