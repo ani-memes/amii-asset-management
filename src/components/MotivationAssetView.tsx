@@ -16,6 +16,7 @@ import {updatedMotivationAsset} from "../events/MotivationAssetEvents";
 import md5 from "js-md5";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import {memeAssetCategories} from "../sagas/MotivationAssetSagas";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -40,26 +41,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const memeAssetCategories = [
-  {title: 'Acknowledgement', value: MemeAssetCategory.ACKNOWLEDGEMENT},
-  {title: 'Frustration', value: MemeAssetCategory.FRUSTRATION},
-  {title: 'Enraged', value: MemeAssetCategory.ENRAGED},
-  {title: 'Celebration', value: MemeAssetCategory.CELEBRATION},
-  {title: 'Happy', value: MemeAssetCategory.HAPPY},
-  {title: 'Smug', value: MemeAssetCategory.SMUG},
-  {title: 'Waiting', value: MemeAssetCategory.WAITING},
-  {title: 'Motivation', value: MemeAssetCategory.MOTIVATION},
-  {title: 'Welcoming', value: MemeAssetCategory.WELCOMING},
-  {title: 'Departure', value: MemeAssetCategory.DEPARTURE},
-  {title: 'Encouragement', value: MemeAssetCategory.ENCOURAGEMENT},
-  {title: 'Mocking', value: MemeAssetCategory.MOCKING},
-  {title: 'Shocked', value: MemeAssetCategory.SHOCKED},
-  {title: 'Disappointment', value: MemeAssetCategory.DISAPPOINTMENT},
-  {title: 'Alert', value: MemeAssetCategory.ALERT},
-  {title: 'Bored', value: MemeAssetCategory.BORED},
-  {title: 'Tired', value: MemeAssetCategory.TIRED},
-  {title: 'Patiently Waiting', value: MemeAssetCategory.PATIENTLY_WAITING},
-]
 
 interface Props {
   motivationAsset: LocalMotivationAsset;

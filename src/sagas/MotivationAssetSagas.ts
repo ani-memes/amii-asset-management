@@ -5,7 +5,7 @@ import {
   createFilteredVisualAssetList,
   RECEIVED_VISUAL_MEME_LIST, UPDATED_VISUAL_ASSET_LIST,
 } from "../events/VisualAssetEvents";
-import {VisualAssetState} from "../reducers/VisualAssetReducer";
+import {MemeAssetCategory, VisualAssetState} from "../reducers/VisualAssetReducer";
 import {
   createCurrentMotivationAssetEvent,
   createdMotivationAsset,
@@ -154,13 +154,52 @@ function containsKeyword(
     .find(fieldValue => fieldValue.indexOf(searchKeyword) > -1)
 }
 
+export const memeAssetCategories = [
+  {title: 'Acknowledgement', value: MemeAssetCategory.ACKNOWLEDGEMENT},
+  {title: 'Frustration', value: MemeAssetCategory.FRUSTRATION},
+  {title: 'Enraged', value: MemeAssetCategory.ENRAGED},
+  {title: 'Celebration', value: MemeAssetCategory.CELEBRATION},
+  {title: 'Happy', value: MemeAssetCategory.HAPPY},
+  {title: 'Smug', value: MemeAssetCategory.SMUG},
+  {title: 'Waiting', value: MemeAssetCategory.WAITING},
+  {title: 'Motivation', value: MemeAssetCategory.MOTIVATION},
+  {title: 'Welcoming', value: MemeAssetCategory.WELCOMING},
+  {title: 'Departure', value: MemeAssetCategory.DEPARTURE},
+  {title: 'Encouragement', value: MemeAssetCategory.ENCOURAGEMENT},
+  {title: 'Mocking', value: MemeAssetCategory.MOCKING},
+  {title: 'Shocked', value: MemeAssetCategory.SHOCKED},
+  {title: 'Disappointment', value: MemeAssetCategory.DISAPPOINTMENT},
+  {title: 'Alert', value: MemeAssetCategory.ALERT},
+  {title: 'Bored', value: MemeAssetCategory.BORED},
+  {title: 'Tired', value: MemeAssetCategory.TIRED},
+  {title: 'Patiently Waiting', value: MemeAssetCategory.PATIENTLY_WAITING},
+];
+
+const assetMappings = memeAssetCategories.reduce(
+  (accum, next) => ({
+    ...accum,
+    [next.value] : next.title
+  }), {})
+
+
+function categoryContainsKeyword(
+  asset: MemeAssetCategory[],
+  searchKeyword: string
+): boolean {
+  // @ts-ignore
+  return !!asset.map(cat => assetMappings[cat])
+    .map(field => field + '')
+    .find(fieldValue => fieldValue.toLowerCase().indexOf(searchKeyword) > -1)
+}
+
 function* filterAssets(keyword: string, visualMemeAssets: VisualMemeAsset[]) {
   if (!keyword) {
     yield put(createFilteredVisualAssetList(visualMemeAssets))
   } else {
     const searchKeyword = keyword.toLowerCase();
     yield put(createFilteredVisualAssetList(
-      visualMemeAssets.filter(asset => containsKeyword(asset, searchKeyword))
+      visualMemeAssets.filter(asset => containsKeyword(asset, searchKeyword) ||
+        categoryContainsKeyword(asset.cat, searchKeyword))
         .filter(Boolean) as VisualMemeAsset[]
     ))
   }
