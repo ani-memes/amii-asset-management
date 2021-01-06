@@ -56,6 +56,9 @@ const memeAssetCategories = [
   {title: 'Shocked', value: MemeAssetCategory.SHOCKED},
   {title: 'Disappointment', value: MemeAssetCategory.DISAPPOINTMENT},
   {title: 'Alert', value: MemeAssetCategory.ALERT},
+  {title: 'Bored', value: MemeAssetCategory.BORED},
+  {title: 'Tired', value: MemeAssetCategory.TIRED},
+  {title: 'Patiently Waiting', value: MemeAssetCategory.PATIENTLY_WAITING},
 ]
 
 interface Props {
