@@ -25,7 +25,10 @@ export enum MemeAssetCategory {
   MOCKING = 11,
   SHOCKED = 12,
   DISAPPOINTMENT = 13,
-  ALERT = 14
+  ALERT = 14,
+  BORED = 15,
+  TIRED = 16,
+  PATIENTLY_WAITING = 17,
 }
 
 export interface LocalVisualAssetDefinition extends VisualMemeAsset, LocalAsset {
@@ -68,7 +71,7 @@ const visualAssetReducer = (state: VisualAssetState = INITIAL_VISUAL_ASSET_STATE
       }
     }
     case SYNCED_ASSET: {
-      if(action.payload === Assets.VISUAL) {
+      if (action.payload === Assets.VISUAL) {
         return {
           ...state,
           unsyncedAssets: {},
