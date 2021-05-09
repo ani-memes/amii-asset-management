@@ -24,12 +24,12 @@ import {omit, values} from 'lodash';
 import {push} from "connected-react-router";
 
 function* motivationAssetViewSaga({payload: assetId}: PayloadEvent<string>) {
-  const motivationAsset = yield call(fetchAssetById, assetId);
+  const motivationAsset: MotivationAsset = yield call(fetchAssetById, assetId);
   yield put(createCurrentMotivationAssetEvent(motivationAsset));
 }
 
 function* localMotivationAssetViewSaga({payload: checkSum}: PayloadEvent<string>) {
-  const motivationAsset = yield call(fetchAssetForChecksum, checkSum);
+  const motivationAsset: MotivationAsset = yield call(fetchAssetForChecksum, checkSum);
   yield put(createCurrentMotivationAssetEvent(motivationAsset));
 }
 
@@ -43,9 +43,11 @@ function* fetchAssetById(assetId: string) {
   if (!visualAssetDefinitions.length) {
     const {payload: freshVisualAssetDefinitions}: PayloadEvent<VisualMemeAsset[]> =
       yield take(RECEIVED_VISUAL_MEME_LIST);
-    return yield call(motivationAssetAssembly, assetId, freshVisualAssetDefinitions)
+    const motivationAsset: MotivationAsset = yield call(motivationAssetAssembly, assetId, freshVisualAssetDefinitions);
+    return motivationAsset
   } else {
-    return yield call(motivationAssetAssembly, assetId, visualAssetDefinitions);
+    const motivationAsset: MotivationAsset = yield call(motivationAssetAssembly, assetId, visualAssetDefinitions);
+    return motivationAsset;
   }
 }
 
@@ -89,7 +91,8 @@ function* resolveGroupedAudibleAsset(audibleAssetId: string) {
 function* yieldGroupedAssets(visualAssetDefinition: VisualMemeAsset) {
   const audibleAssetId = visualAssetDefinition.aud;
   if (audibleAssetId) {
-    return yield call(resolveGroupedAudibleAsset, audibleAssetId)
+    const groupedAssets: MotivationAsset = yield call(resolveGroupedAudibleAsset, audibleAssetId);
+    return groupedAssets
   }
 
   return {};
@@ -101,7 +104,7 @@ function* motivationAssetAssembly(
 ) {
   const visualAssetDefinition = assets.find(assetDef => assetDef.id === assetId);
   if (visualAssetDefinition) {
-    const groupedAssets = yield call(yieldGroupedAssets, visualAssetDefinition);
+    const groupedAssets: MotivationAsset = yield call(yieldGroupedAssets, visualAssetDefinition);
     const motivationAsset: MotivationAsset = {
       ...groupedAssets,
       visuals: visualAssetDefinition,

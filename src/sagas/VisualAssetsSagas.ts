@@ -34,7 +34,7 @@ function* visualAssetFetchSaga() {
   if (assets.length) return;
 
   try {
-    const visualAssets = yield call(fetchVisualAssetList);
+    const visualAssets: VisualMemeAsset[] = yield call(fetchVisualAssetList);
     yield put(createReceivedVisualMemeList(
       visualAssets.reverse()
     ));
@@ -98,7 +98,7 @@ function* localAssetCleanupSaga({payload: syncedAsset}: PayloadEvent<Assets>) {
         .filter(asset => !asset.imageChecksum)
     ));
     // todo: why dis?
-    const newAssetList = yield call(fetchVisualAssetList);
+    const newAssetList: VisualMemeAsset[] = yield call(fetchVisualAssetList);
     yield put(createUpdatedVisualAssetList(newAssetList))
   }
 }
