@@ -29,6 +29,7 @@ export enum MemeAssetCategory {
   BORED = 15,
   TIRED = 16,
   PATIENTLY_WAITING = 17,
+  POUTING = 18,
 }
 
 export interface LocalVisualAssetDefinition extends VisualMemeAsset, LocalAsset {

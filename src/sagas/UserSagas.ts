@@ -5,13 +5,14 @@ import {createReceivedUserProfileEvent} from "../events/UserEvents";
 import {selectRouterState, selectUserState} from "../reducers";
 import {push} from "connected-react-router";
 import {UserState} from "../reducers/UserReducer";
+import { UserProfile } from '../types/User';
 
 function* userProfileFetchSaga() {
   const {profile}: UserState = yield select(selectUserState)
   if (profile?.attributes) return;
 
   try {
-    const userProfile = yield call(() => Auth.currentUserInfo());
+    const userProfile: UserProfile = yield call(() => Auth.currentUserInfo());
     yield put(createReceivedUserProfileEvent(userProfile))
   } catch (e) {
     console.warn("Unable to get user profile information", e)
