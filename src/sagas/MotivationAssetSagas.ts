@@ -176,7 +176,8 @@ export const memeAssetCategories = [
   {title: 'Bored', value: MemeAssetCategory.BORED},
   {title: 'Tired', value: MemeAssetCategory.TIRED},
   {title: 'Patiently Waiting', value: MemeAssetCategory.PATIENTLY_WAITING},
-];
+  {title: 'Pouting', value: MemeAssetCategory.POUTING},
+].sort((a,b)=> a.title.localeCompare(b.title));
 
 const assetMappings = memeAssetCategories.reduce(
   (accum, next) => ({
