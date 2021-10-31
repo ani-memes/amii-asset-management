@@ -1,5 +1,10 @@
 import {all, call, put, select, take, takeEvery} from 'redux-saga/effects';
-import {selectAudibleAssetState, selectMotivationAssetState, selectVisualAssetState} from "../reducers";
+import {
+  selectAudibleAssetState,
+  selectCharacterSourceState,
+  selectMotivationAssetState,
+  selectVisualAssetState
+} from "../reducers";
 import {
   createdVisualAsset,
   createFilteredVisualAssetList,
@@ -22,6 +27,7 @@ import {AudibleAssetDefinition, AudibleAssetState} from "../reducers/AudibleAsse
 import {createdAudibleAsset, RECEIVED_AUDIBLE_ASSET_LIST} from "../events/AudibleAssetEvents";
 import {omit, values} from 'lodash';
 import {push} from "connected-react-router";
+import {CharacterSourceState} from "../reducers/CharacterSourceReducer";
 
 function* motivationAssetViewSaga({payload: assetId}: PayloadEvent<string>) {
   const motivationAsset: MotivationAsset = yield call(fetchAssetById, assetId);
@@ -196,14 +202,28 @@ function categoryContainsKeyword(
     .find(fieldValue => fieldValue.toLowerCase().indexOf(searchKeyword) > -1)
 }
 
+function characterOrAnimeContainsKeyword(
+  char: string[],
+  searchKeyword: string,
+  animeCharacterState: CharacterSourceState
+): boolean {
+ return !!char.map(character => animeCharacterState.characters[character])
+   .map(characterAsset => characterAsset?.name + ' ' + animeCharacterState.anime[characterAsset?.animeId]?.name)
+   .find(characterName => characterName.toLowerCase().indexOf(searchKeyword) > -1)
+}
+
 function* filterAssets(keyword: string, visualMemeAssets: VisualMemeAsset[]) {
   if (!keyword) {
     yield put(createFilteredVisualAssetList(visualMemeAssets))
   } else {
     const searchKeyword = keyword.toLowerCase();
+    const characters: CharacterSourceState = yield select(selectCharacterSourceState);
     yield put(createFilteredVisualAssetList(
-      visualMemeAssets.filter(asset => containsKeyword(asset, searchKeyword) ||
-        categoryContainsKeyword(asset.cat, searchKeyword))
+      visualMemeAssets.filter(asset =>
+        containsKeyword(asset, searchKeyword) ||
+        categoryContainsKeyword(asset.cat, searchKeyword) ||
+        characterOrAnimeContainsKeyword(asset.char, searchKeyword, characters)
+      )
         .filter(Boolean) as VisualMemeAsset[]
     ))
   }
