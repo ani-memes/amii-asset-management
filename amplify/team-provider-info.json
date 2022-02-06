@@ -15,7 +15,11 @@
       "auth": {
         "cognito8be6495e": {}
       },
-      "hosting": {}
+      "hosting": {},
+      "function": {
+        "amiipublicassets": {},
+        "amiiassetadminapi": {}
+      }
     }
   }
 }

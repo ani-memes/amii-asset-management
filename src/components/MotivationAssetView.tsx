@@ -174,7 +174,8 @@ const MotivationAssetView: FC<Props> = ({
               )
             }
             {
-              motivationAsset?.visuals && (
+              motivationAsset?.visuals &&
+              !!listOfCharacters.length && (
                 <Autocomplete
                   multiple
                   id="characterIds"
